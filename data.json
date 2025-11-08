@@ -1,0 +1,40 @@
+{
+  "encounters": [
+    {
+      "name": "Испытание прошлым",
+      "description": "",
+      "type": "combat",
+      "participants": [
+        {
+          "name": "Дух Бури",
+          "type": "monster",
+          "hp": 1,
+          "maxHp": 105,
+          "ac": 18,
+          "id": "part_enhv7eqkd"
+        },
+        {
+          "name": "Дух Диких Троп",
+          "type": "monster",
+          "hp": 7,
+          "maxHp": 74,
+          "ac": 16,
+          "id": "part_8jevgymb3"
+        },
+        {
+          "name": "Player 1",
+          "type": "pc",
+          "hp": 30,
+          "maxHp": 30,
+          "ac": 13,
+          "id": "part_qyxhmbou7"
+        }
+      ],
+      "difficulty": "hard",
+      "environment": "Мир Снов",
+      "id": "enc_9qtxkpfov",
+      "created": 1762613802382,
+      "updated": 1762613802382
+    }
+  ]
+}

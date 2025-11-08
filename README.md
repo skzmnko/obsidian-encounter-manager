@@ -14,7 +14,8 @@ A plugin for managing D&D encounters and combat tracking in Obsidian.
 1. Clone this repository
 2. Run `npm install` to install dependencies
 3. Run `npm run dev` to start development build
-4. Link the plugin to your Obsidian vault for testing
+4. Run `npm run build` to test current build
+5. Link the plugin to your Obsidian vault for testing
 
 ## Installation
 

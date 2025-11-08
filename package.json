@@ -8,14 +8,8 @@
     "build": "node esbuild.config.mjs production",
     "version": "node version-bump.mjs"
   },
-  "keywords": [
-    "obsidian",
-    "plugin",
-    "dnd",
-    "encounter",
-    "combat"
-  ],
-  "author": "Your Name",
+  "keywords": ["obsidian", "plugin", "dnd", "encounter", "combat"],
+  "author": "skzmnko",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.11.6",
