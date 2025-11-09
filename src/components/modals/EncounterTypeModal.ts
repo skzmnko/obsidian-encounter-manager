@@ -1,5 +1,5 @@
 import { App, Modal } from 'obsidian';
-import { EncounterCreationModal } from './EncounterCreationModal';
+import { EncounterCreationModal } from 'src/components/modals/EncounterCreationModal';
 
 export class EncounterTypeModal extends Modal {
     plugin: any;

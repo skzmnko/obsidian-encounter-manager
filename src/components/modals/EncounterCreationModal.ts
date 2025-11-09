@@ -1,6 +1,6 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
-import { Participant } from '../../models/Encounter';
-import { CombatParticipantModal } from './CombatParticipantModal';
+import { Participant } from 'src/models/Encounter';
+import { CombatParticipantModal } from 'src/components/modals/CombatParticipantModal';
 
 export class EncounterCreationModal extends Modal {
     plugin: any;

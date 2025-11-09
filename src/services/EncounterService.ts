@@ -1,5 +1,5 @@
-import { Encounter, Participant } from '../models/Encounter';
-import { StorageService } from './StorageService';
+import { Encounter, Participant } from 'src/models/Encounter';
+import { StorageService } from 'src/services/StorageService';
 
 export class EncounterService {
     private storage: StorageService;
