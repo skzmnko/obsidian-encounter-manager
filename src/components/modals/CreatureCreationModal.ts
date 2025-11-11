@@ -8,8 +8,8 @@ export class CreatureCreationModal extends Modal {
     // Поля существа
     name: string = '';
     type: string = '';
-    size: string = 'Средний';
-    alignment: string = 'Без мировоззрения';
+    size: string = 'Medium';
+    alignment: string = 'Истинно-Нейтральное';
     ac: number = 13;
     hp: number = 30;
     speed: string = '30 футов';
@@ -41,8 +41,8 @@ export class CreatureCreationModal extends Modal {
         // Основные характеристики
         this.renderBasicFields(contentEl);
         
-        // Характеристики
-        this.renderAbilityScores(contentEl);
+        // Характеристики - теперь горизонтальные
+        this.renderHorizontalAbilityScores(contentEl);
         
         // Дополнительные поля
         this.renderAdditionalFields(contentEl);
@@ -90,7 +90,6 @@ export class CreatureCreationModal extends Modal {
                         new Notice(`Существо "${creature.name}" добавлено в бестиарий!`);
                     } catch (error) {
                         console.error('Error creating creature:', error);
-                        // Более понятное сообщение для пользователя
                         if (error.message.includes('already exists')) {
                             new Notice('Ошибка: проблема с файловой системой. Попробуйте еще раз.');
                         } else {
@@ -185,34 +184,111 @@ export class CreatureCreationModal extends Modal {
                 .onChange(value => this.habitat = value));
     }
 
-    renderAbilityScores(contentEl: HTMLElement) {
+    // НОВЫЙ МЕТОД: горизонтальное расположение характеристик
+    renderHorizontalAbilityScores(contentEl: HTMLElement) {
         contentEl.createEl('h3', { text: 'Характеристики' });
 
-        // Используем интерфейс для типизации
-        interface AbilityField {
-            key: keyof CreatureCreationModal;
-            label: string;
-        }
+        // Создаем контейнер для горизонтального расположения
+        const abilitiesContainer = contentEl.createDiv({ 
+            cls: 'abilities-horizontal-container' 
+        });
 
-        const abilities: AbilityField[] = [
-            { key: 'str', label: 'Сила (STR)' },
-            { key: 'dex', label: 'Ловкость (DEX)' },
-            { key: 'con', label: 'Телосложение (CON)' },
-            { key: 'int', label: 'Интеллект (INT)' },
-            { key: 'wis', label: 'Мудрость (WIS)' },
-            { key: 'cha', label: 'Харизма (CHA)' }
+        // Массив характеристик с русскими сокращениями
+        const abilities = [
+            { key: 'str', label: 'СИЛ', fullName: 'Сила' },
+            { key: 'dex', label: 'ЛОВ', fullName: 'Ловкость' },
+            { key: 'con', label: 'ТЕЛ', fullName: 'Телосложение' },
+            { key: 'int', label: 'ИНТ', fullName: 'Интеллект' },
+            { key: 'wis', label: 'МДР', fullName: 'Мудрость' },
+            { key: 'cha', label: 'ХАР', fullName: 'Харизма' }
         ];
 
         abilities.forEach(ability => {
-            new Setting(contentEl)
-                .setName(ability.label)
-                .addText(text => text
-                    .setValue((this[ability.key] as number).toString())
-                    .onChange(value => {
-                        // Используем type assertion для безопасности
-                        (this[ability.key] as number) = Number(value) || 10;
-                    }));
+            const abilityCol = abilitiesContainer.createDiv({ 
+                cls: 'ability-column' 
+            });
+
+            // Заголовок колонки
+            abilityCol.createEl('div', { 
+                text: ability.label,
+                cls: 'ability-label'
+            });
+
+            // Поле ввода
+            const input = abilityCol.createEl('input', {
+                type: 'text',
+                value: (this[ability.key as keyof CreatureCreationModal] as number).toString(),
+                cls: 'ability-input'
+            });
+
+            // Подсказка при наведении
+            input.title = ability.fullName;
+
+            input.addEventListener('input', (e) => {
+                const value = (e.target as HTMLInputElement).value;
+                const numValue = Number(value);
+                if (!isNaN(numValue)) {
+                    (this[ability.key as keyof CreatureCreationModal] as number) = numValue;
+                }
+            });
+
+            // Валидация при потере фокуса
+            input.addEventListener('blur', (e) => {
+                const value = (e.target as HTMLInputElement).value;
+                const numValue = Number(value);
+                if (isNaN(numValue) || value.trim() === '') {
+                    (this[ability.key as keyof CreatureCreationModal] as number) = 10;
+                    (e.target as HTMLInputElement).value = '10';
+                }
+            });
         });
+
+        // Добавляем CSS стили для горизонтального расположения
+        this.addHorizontalAbilitiesStyles(contentEl);
+    }
+
+    // Метод для добавления CSS стилей
+    private addHorizontalAbilitiesStyles(contentEl: HTMLElement) {
+        const style = contentEl.createEl('style');
+        style.textContent = `
+            .abilities-horizontal-container {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+            }
+            
+            .ability-column {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+                min-width: 60px;
+            }
+            
+            .ability-label {
+                font-weight: bold;
+                font-size: 14px;
+                margin-bottom: 5px;
+                color: var(--text-normal);
+            }
+            
+            .ability-input {
+                width: 100%;
+                text-align: center;
+                padding: 5px;
+                border: 1px solid var(--background-modifier-border);
+                border-radius: 4px;
+                background: var(--background-primary);
+                color: var(--text-normal);
+            }
+            
+            .ability-input:focus {
+                border-color: var(--interactive-accent);
+                outline: none;
+            }
+        `;
     }
 
     renderAdditionalFields(contentEl: HTMLElement) {
