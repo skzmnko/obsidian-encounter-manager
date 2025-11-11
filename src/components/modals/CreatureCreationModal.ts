@@ -12,7 +12,7 @@ export class CreatureCreationModal extends Modal {
     alignment: string = 'Unaligned';
     ac: number = 13;
     hp: number = 30;
-    speed: string = '30 ft.';
+    speed: string = '30 футов';
     str: number = 10;
     dex: number = 10;
     con: number = 10;
@@ -22,7 +22,7 @@ export class CreatureCreationModal extends Modal {
     skills: string = '';
     senses: string = '';
     languages: string = '';
-    challenge: string = '1/4';
+    habitat: string = '';
     traits: string = '';
     actions: string = '';
     legendaryActions: string = '';
@@ -75,7 +75,7 @@ export class CreatureCreationModal extends Modal {
                         skills: this.skills,
                         senses: this.senses,
                         languages: this.languages,
-                        challenge: this.challenge,
+                        habitat: this.habitat,
                         traits: this.traits,
                         actions: this.actions,
                         legendaryActions: this.legendaryActions,
@@ -168,12 +168,12 @@ export class CreatureCreationModal extends Modal {
                 .onChange(value => this.speed = value));
 
         new Setting(contentEl)
-            .setName('Уровень угрозы')
-            .setDesc('Уровень сложности существа')
+            .setName('Место обитания')
+            .setDesc('Типичная среда обитания существа')
             .addText(text => text
-                .setPlaceholder('1/4')
-                .setValue(this.challenge)
-                .onChange(value => this.challenge = value));
+                .setPlaceholder('Горы, леса, подземелья...')
+                .setValue(this.habitat)
+                .onChange(value => this.habitat = value));
     }
 
     renderAbilityScores(contentEl: HTMLElement) {

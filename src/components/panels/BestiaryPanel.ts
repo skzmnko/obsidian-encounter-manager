@@ -79,7 +79,7 @@ export class BestiaryPanel extends ItemView {
         
         const meta = creatureEl.createDiv({ cls: 'creature-meta' });
         meta.createEl('span', { text: `${creature.type}, ${creature.size}` });
-        meta.createEl('span', { text: `Угроза: ${creature.challenge}` });
+        meta.createEl('span', { text: `Обитает: ${creature.habitat}` });
         
         const stats = creatureEl.createDiv({ cls: 'creature-stats' });
         stats.createEl('span', { text: `AC: ${creature.ac}` });

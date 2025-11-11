@@ -16,7 +16,7 @@ export interface Creature {
     skills: string;
     senses: string;
     languages: string;
-    challenge: string;
+    habitat: string;
     traits: string;
     actions: string;
     legendaryActions: string;
