@@ -41,7 +41,7 @@ export class CreatureCreationModal extends Modal {
         // Основные характеристики
         this.renderBasicFields(contentEl);
         
-        // Характеристики - теперь горизонтальные
+        // Характеристики - теперь с модификаторами
         this.renderHorizontalAbilityScores(contentEl);
         
         // Дополнительные поля
@@ -184,7 +184,17 @@ export class CreatureCreationModal extends Modal {
                 .onChange(value => this.habitat = value));
     }
 
-    // НОВЫЙ МЕТОД: горизонтальное расположение характеристик
+    // Метод для расчета модификатора характеристики
+    private calculateModifier(abilityScore: number): number {
+        return Math.floor((abilityScore - 10) / 2);
+    }
+
+    // Метод для форматирования модификатора (с плюсом для положительных значений)
+    private formatModifier(modifier: number): string {
+        return modifier >= 0 ? `+${modifier}` : `${modifier}`;
+    }
+
+    // НОВЫЙ МЕТОД: горизонтальное расположение характеристик с модификаторами
     renderHorizontalAbilityScores(contentEl: HTMLElement) {
         contentEl.createEl('h3', { text: 'Характеристики' });
 
@@ -214,7 +224,7 @@ export class CreatureCreationModal extends Modal {
                 cls: 'ability-label'
             });
 
-            // Поле ввода
+            // Поле ввода значения характеристики
             const input = abilityCol.createEl('input', {
                 type: 'text',
                 value: (this[ability.key as keyof CreatureCreationModal] as number).toString(),
@@ -224,13 +234,30 @@ export class CreatureCreationModal extends Modal {
             // Подсказка при наведении
             input.title = ability.fullName;
 
-            input.addEventListener('input', (e) => {
-                const value = (e.target as HTMLInputElement).value;
+            // Поле для модификатора (readonly) - ИСПРАВЛЕНО: readonly вместо readOnly
+            const modifierInput = abilityCol.createEl('input', {
+                type: 'text',
+                value: this.formatModifier(this.calculateModifier(
+                    this[ability.key as keyof CreatureCreationModal] as number
+                )),
+                cls: 'ability-modifier-input'
+            });
+            modifierInput.setAttr('readonly', 'true');
+
+            modifierInput.title = `Модификатор ${ability.fullName}`;
+
+            // Обработчик изменения значения характеристики
+            const updateModifier = () => {
+                const value = input.value;
                 const numValue = Number(value);
                 if (!isNaN(numValue)) {
                     (this[ability.key as keyof CreatureCreationModal] as number) = numValue;
+                    const modifier = this.calculateModifier(numValue);
+                    modifierInput.value = this.formatModifier(modifier);
                 }
-            });
+            };
+
+            input.addEventListener('input', updateModifier);
 
             // Валидация при потере фокуса
             input.addEventListener('blur', (e) => {
@@ -239,6 +266,8 @@ export class CreatureCreationModal extends Modal {
                 if (isNaN(numValue) || value.trim() === '') {
                     (this[ability.key as keyof CreatureCreationModal] as number) = 10;
                     (e.target as HTMLInputElement).value = '10';
+                    const modifier = this.calculateModifier(10);
+                    modifierInput.value = this.formatModifier(modifier);
                 }
             });
         });
@@ -282,11 +311,33 @@ export class CreatureCreationModal extends Modal {
                 border-radius: 4px;
                 background: var(--background-primary);
                 color: var(--text-normal);
+                margin-bottom: 3px;
             }
             
             .ability-input:focus {
                 border-color: var(--interactive-accent);
                 outline: none;
+            }
+            
+            .ability-modifier-input {
+                width: 100%;
+                text-align: center;
+                padding: 5px;
+                border: 1px solid var(--background-modifier-border);
+                border-radius: 4px;
+                background: var(--background-secondary);
+                color: var(--text-muted);
+                font-style: italic;
+                cursor: not-allowed;
+            }
+            
+            .ability-modifier-input:focus {
+                outline: none;
+            }
+            
+            .ability-modifier-input[readonly] {
+                background: var(--background-secondary);
+                color: var(--text-muted);
             }
         `;
     }
@@ -332,7 +383,7 @@ export class CreatureCreationModal extends Modal {
             .addTextArea(text => text
                 .setPlaceholder('Укус: +5 к попаданию, 10 (2к6 + 3) колющего урона')
                 .setValue(this.actions)
-                .onChange(value => this.actions = value));
+                .onChange(value => this.actions = value)); // ИСПРАВЛЕНО: onChange вместо onClick
 
         new Setting(contentEl)
             .setName('Легендарные действия')
