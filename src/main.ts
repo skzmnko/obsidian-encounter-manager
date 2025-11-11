@@ -54,15 +54,6 @@ export default class EncounterManagerPlugin extends Plugin {
                 this.activateBestiaryView();
             });
 
-            // Альтернативные иконки для бестиария (раскомментируйте одну из них):
-            // this.addRibbonIcon('feather', 'Open Bestiary', () => {
-            //     this.activateBestiaryView();
-            // });
-            
-            // this.addRibbonIcon('book-open', 'Open Bestiary', () => {
-            //     this.activateBestiaryView();
-            // });
-
             this.addSettingTab(new EncounterManagerSettingTab(this.app, this));
 
             // Регистрируем панель бестиария

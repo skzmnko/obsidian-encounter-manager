@@ -13,7 +13,6 @@ export class StorageService {
             const fileName = this.getDateFileName(date);
             const filePath = this.getEncountersFilePath(fileName);
             
-            // Проверяем существует ли файл
             const file = this.plugin.app.vault.getAbstractFileByPath(filePath);
             
             if (file && file instanceof TFile) {
@@ -31,20 +30,13 @@ export class StorageService {
     async saveEncountersByDate(date: Date, data: any): Promise<void> {
         try {
             const fileName = this.getDateFileName(date);
-            const folderPath = this.getEncountersFolderPath();
             const filePath = this.getEncountersFilePath(fileName);
             
-            // Создаем папку если не существует
-            await this.ensureEncountersFolder();
-            
-            // Проверяем существует ли файл
             let file = this.plugin.app.vault.getAbstractFileByPath(filePath);
             
             if (file && file instanceof TFile) {
-                // Обновляем существующий файл
                 await this.plugin.app.vault.modify(file, JSON.stringify(data, null, 2));
             } else {
-                // Создаем новый файл
                 file = await this.plugin.app.vault.create(filePath, JSON.stringify(data, null, 2));
             }
             
@@ -69,36 +61,22 @@ export class StorageService {
         return normalizePath(`${this.getEncountersFolderPath()}/${fileName}`);
     }
 
-    private async ensureEncountersFolder(): Promise<void> {
-        const folderPath = this.getEncountersFolderPath();
-        const folder = this.plugin.app.vault.getAbstractFileByPath(folderPath);
-        
-        if (!folder) {
-            await this.plugin.app.vault.createFolder(folderPath);
-        }
-    }
-
-    // Старые методы для обратной совместимости (можно удалить позже)
-    async loadData(): Promise<any> {
-        return await this.loadEncountersByDate(new Date());
-    }
-
-    async saveData(data: any): Promise<void> {
-        await this.saveEncountersByDate(new Date(), data);
-    }
-
+    // МЕТОДЫ ДЛЯ BESTIARY - ИСПРАВЛЕННЫЕ
     async loadBestiaryData(): Promise<BestiaryData> {
         try {
-            const fileName = 'bestiary.json';
-            const filePath = this.getBestiaryFilePath(fileName);
+            const filePath = this.getBestiaryFilePath();
+            console.log('Loading bestiary from:', filePath);
             
             const file = this.plugin.app.vault.getAbstractFileByPath(filePath);
             
             if (file && file instanceof TFile) {
                 const content = await this.plugin.app.vault.read(file);
-                return JSON.parse(content);
+                const data = JSON.parse(content);
+                console.log('Bestiary data loaded:', data.creatures?.length || 0, 'creatures');
+                return data;
             }
             
+            console.log('Bestiary file not found, creating default data');
             return { creatures: [], lastUpdated: Date.now() };
         } catch (error) {
             console.error('Error loading bestiary data:', error);
@@ -108,19 +86,23 @@ export class StorageService {
 
     async saveBestiaryData(data: BestiaryData): Promise<void> {
         try {
-            const fileName = 'bestiary.json';
-            const folderPath = this.getBestiaryFolderPath();
-            const filePath = this.getBestiaryFilePath(fileName);
+            const filePath = this.getBestiaryFilePath();
+            console.log('Saving bestiary to:', filePath, 'creatures:', data.creatures.length);
             
-            await this.ensureBestiaryFolder();
+            // Убедимся, что папка существует
+            await this.ensureStorageFolder();
             
             let file = this.plugin.app.vault.getAbstractFileByPath(filePath);
             
             if (file && file instanceof TFile) {
+                console.log('Updating existing bestiary file');
                 await this.plugin.app.vault.modify(file, JSON.stringify(data, null, 2));
             } else {
+                console.log('Creating new bestiary file');
                 file = await this.plugin.app.vault.create(filePath, JSON.stringify(data, null, 2));
             }
+            
+            console.log('Bestiary data saved successfully');
             
         } catch (error) {
             console.error('Error saving bestiary data:', error);
@@ -128,20 +110,38 @@ export class StorageService {
         }
     }
 
-    private getBestiaryFolderPath(): string {
-        return normalizePath(`${this.plugin.manifest.dir}/bestiary`);
+    // ИСПРАВЛЕННЫЙ ПУТЬ - используем корень vault
+    private getBestiaryFilePath(): string {
+        return normalizePath('storage/bestiary.json');
     }
 
-    private getBestiaryFilePath(fileName: string): string {
-        return normalizePath(`${this.getBestiaryFolderPath()}/${fileName}`);
-    }
-
-    private async ensureBestiaryFolder(): Promise<void> {
-        const folderPath = this.getBestiaryFolderPath();
-        const folder = this.plugin.app.vault.getAbstractFileByPath(folderPath);
-        
-        if (!folder) {
-            await this.plugin.app.vault.createFolder(folderPath);
+    private async ensureStorageFolder(): Promise<void> {
+        try {
+            const storagePath = 'storage';
+            const folder = this.plugin.app.vault.getAbstractFileByPath(storagePath);
+            
+            if (!folder) {
+                console.log('Creating storage folder:', storagePath);
+                await this.plugin.app.vault.createFolder(storagePath);
+                console.log('Storage folder created successfully');
+            }
+        } catch (error) {
+            // Игнорируем ошибку "папка уже существует"
+            if (error.message?.includes('already exists')) {
+                console.log('Storage folder already exists');
+            } else {
+                console.error('Error ensuring storage folder:', error);
+                throw error;
+            }
         }
+    }
+
+    // Старые методы для обратной совместимости
+    async loadData(): Promise<any> {
+        return await this.loadEncountersByDate(new Date());
+    }
+
+    async saveData(data: any): Promise<void> {
+        await this.saveEncountersByDate(new Date(), data);
     }
 }

@@ -83,13 +83,19 @@ export class CreatureCreationModal extends Modal {
                     };
 
                     try {
+                        console.log('Creating creature:', creatureData.name);
                         const creature = await this.bestiaryService.createCreature(creatureData);
                         this.onSave(creature);
                         this.close();
                         new Notice(`Существо "${creature.name}" добавлено в бестиарий!`);
                     } catch (error) {
-                        new Notice('Ошибка при сохранении существа');
-                        console.error(error);
+                        console.error('Error creating creature:', error);
+                        // Более понятное сообщение для пользователя
+                        if (error.message.includes('already exists')) {
+                            new Notice('Ошибка: проблема с файловой системой. Попробуйте еще раз.');
+                        } else {
+                            new Notice('Ошибка при сохранении существа: ' + error.message);
+                        }
                     }
                 }))
             .addButton(btn => btn
