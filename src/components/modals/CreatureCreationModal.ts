@@ -8,8 +8,8 @@ export class CreatureCreationModal extends Modal {
     // Поля существа
     name: string = '';
     type: string = '';
-    size: string = 'Medium';
-    alignment: string = 'Unaligned';
+    size: string = 'Средний';
+    alignment: string = 'Без мировоззрения';
     ac: number = 13;
     hp: number = 30;
     speed: string = '30 футов';
@@ -138,8 +138,17 @@ export class CreatureCreationModal extends Modal {
         new Setting(contentEl)
             .setName('Мировоззрение')
             .setDesc('Мировоззрение существа')
-            .addText(text => text
-                .setPlaceholder('Законно-злое')
+            .addDropdown(dropdown => dropdown
+                .addOption('Без мировоззрения', 'Без мировоззрения')
+                .addOption('Законно-Доброе', 'Законно-Доброе')
+                .addOption('Нейтрально-Доброе', 'Нейтрально-Доброе')
+                .addOption('Хаотично-Доброе', 'Хаотично-Доброе')
+                .addOption('Законно-Нейтральное', 'Законно-Нейтральное')
+                .addOption('Истинно-Нейтральное', 'Истинно-Нейтральное')
+                .addOption('Хаотично-Нейтральное', 'Хаотично-Нейтральное')
+                .addOption('Законно-Злое', 'Законно-Злое')
+                .addOption('Нейтрально-Злое', 'Нейтрально-Злое')
+                .addOption('Хаотично-Злое', 'Хаотично-Злое')
                 .setValue(this.alignment)
                 .onChange(value => this.alignment = value));
 

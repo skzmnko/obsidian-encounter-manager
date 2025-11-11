@@ -50,7 +50,7 @@ export default class EncounterManagerPlugin extends Plugin {
             });
 
             // Добавляем иконку для бестиария
-            this.addRibbonIcon('library', 'Open Bestiary', () => {
+            this.addRibbonIcon('feather', 'Open Bestiary', () => {
                 this.activateBestiaryView();
             });
 
