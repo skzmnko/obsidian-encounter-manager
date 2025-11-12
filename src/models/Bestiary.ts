@@ -7,6 +7,7 @@ export interface Creature {
     ac: number;
     hit_dice: string;
     speed: string;
+    initiative: number;
     proficiency_bonus: number;
     characteristics: number[];
     skills: string;

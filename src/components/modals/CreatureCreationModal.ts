@@ -13,6 +13,7 @@ export class CreatureCreationModal extends Modal {
     ac: number = 13;
     hit_dice: string = '8d8+24';
     speed: string = '30 футов';
+    initiative: number = 0;
     proficiency_bonus: number = 2;
     characteristics: number[] = [10, 10, 10, 10, 10, 10];
     skills: string = '';
@@ -23,6 +24,8 @@ export class CreatureCreationModal extends Modal {
     actions: string = '';
     legendaryActions: string = '';
     notes: string = '';
+
+    private initiativeInput: HTMLInputElement | null = null;
 
     constructor(app: App, bestiaryService: any, onSave: (creature: Creature) => void) {
         super(app);
@@ -62,6 +65,7 @@ export class CreatureCreationModal extends Modal {
                         ac: this.ac,
                         hit_dice: this.hit_dice,
                         speed: this.speed,
+                        initiative: this.initiative,
                         proficiency_bonus: this.proficiency_bonus,
                         characteristics: this.characteristics,
                         skills: this.skills,
@@ -166,6 +170,17 @@ export class CreatureCreationModal extends Modal {
                 .setPlaceholder('30 ft., fly 60 ft.')
                 .setValue(this.speed)
                 .onChange(value => this.speed = value));
+
+        new Setting(contentEl)
+            .setName('Инициатива')
+            .setDesc('Бонус инициативы (рассчитывается автоматически как модификатор ловкости)')
+            .addText(text => {
+                this.initiativeInput = text.inputEl; // Сохраняем ссылку на поле
+                text.setPlaceholder('+0')
+                    .setValue(this.formatModifier(this.calculateInitiative()))
+                    .setDisabled(true); // readonly поле
+                this.initiative = this.calculateInitiative(); // Инициализируем значение
+            });
         
         new Setting(contentEl)
             .setName('Бонус мастерства')
@@ -192,6 +207,12 @@ export class CreatureCreationModal extends Modal {
     // Метод для расчета модификатора характеристики
     private calculateModifier(abilityScore: number): number {
         return Math.floor((abilityScore - 10) / 2);
+    }
+
+    // Метод для расчета инициативы (модификатор ловкости)
+    private calculateInitiative(): number {
+        const dexModifier = this.calculateModifier(this.characteristics[1]); // characteristics[1] = ловкость
+        return dexModifier;
     }
 
     // Метод для форматирования модификатора (с плюсом для положительных значений)
@@ -257,6 +278,11 @@ export class CreatureCreationModal extends Modal {
                     this.characteristics[ability.index] = numValue;
                     const modifier = this.calculateModifier(numValue);
                     modifierInput.value = this.formatModifier(modifier);
+
+                    if (ability.index === 1) {
+                        this.initiative = this.calculateInitiative();
+                        this.updateInitiativeField();
+                    }
                 }
             };
 
@@ -271,12 +297,23 @@ export class CreatureCreationModal extends Modal {
                     (e.target as HTMLInputElement).value = '10';
                     const modifier = this.calculateModifier(10);
                     modifierInput.value = this.formatModifier(modifier);
+
+                    if (ability.index === 1) {
+                        this.initiative = this.calculateInitiative();
+                        this.updateInitiativeField();
+                    }
                 }
             });
         });
 
         // Добавляем CSS стили для горизонтального расположения
         this.addHorizontalAbilitiesStyles(contentEl);
+    }
+
+    private updateInitiativeField(): void {
+        if (this.initiativeInput) {
+            this.initiativeInput.value = this.formatModifier(this.initiative);
+        }
     }
 
     // Метод для добавления CSS стилей
