@@ -17,6 +17,32 @@ export const DAMAGE_TYPES = [
 
 export type DamageType = typeof DAMAGE_TYPES[number];
 
+export const CREATURE_SIZES = [
+    { value: 'Tiny', label: 'Крошечный' },
+    { value: 'Small', label: 'Малый' },
+    { value: 'Medium', label: 'Средний' },
+    { value: 'Large', label: 'Большой' },
+    { value: 'Huge', label: 'Огромный' },
+    { value: 'Gargantuan', label: 'Громадный' }
+] as const;
+
+export type CreatureSize = typeof CREATURE_SIZES[number]['value'];
+
+export const ALIGNMENTS = [
+    { value: 'Без мировоззрения', label: 'Без мировоззрения' },
+    { value: 'Законно-Доброе', label: 'Законно-Доброе' },
+    { value: 'Нейтрально-Доброе', label: 'Нейтрально-Доброе' },
+    { value: 'Хаотично-Доброе', label: 'Хаотично-Доброе' },
+    { value: 'Законно-Нейтральное', label: 'Законно-Нейтральное' },
+    { value: 'Истинно-Нейтральное', label: 'Истинно-Нейтральное' },
+    { value: 'Хаотично-Нейтральное', label: 'Хаотично-Нейтральное' },
+    { value: 'Законно-Злое', label: 'Законно-Злое' },
+    { value: 'Нейтрально-Злое', label: 'Нейтрально-Злое' },
+    { value: 'Хаотично-Злое', label: 'Хаотично-Злое' }
+] as const;
+
+export type Alignment = typeof ALIGNMENTS[number]['value'];
+
 export const CONDITIONS = [
     {
         name: 'без сознания',

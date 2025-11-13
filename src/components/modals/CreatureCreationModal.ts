@@ -1,6 +1,6 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
 import { Creature } from 'src/models/Bestiary';
-import { DAMAGE_TYPES, CONDITION_NAMES, DamageType } from 'src/constants/DnDConstants';
+import { DAMAGE_TYPES, CONDITION_NAMES, CREATURE_SIZES, ALIGNMENTS, DamageType } from 'src/constants/Constants';
 
 export class CreatureCreationModal extends Modal {
     bestiaryService: any;
@@ -145,35 +145,31 @@ export class CreatureCreationModal extends Modal {
                 .setPlaceholder('Дракон')
                 .onChange(value => this.type = value));
 
+        // Размер - ОБНОВЛЕНО: используем константы
         new Setting(contentEl)
             .setName('Размер')
             .setDesc('Размер существа')
-            .addDropdown(dropdown => dropdown
-                .addOption('Tiny', 'Крошечный')
-                .addOption('Small', 'Малый')
-                .addOption('Medium', 'Средний')
-                .addOption('Large', 'Большой')
-                .addOption('Huge', 'Огромный')
-                .addOption('Gargantuan', 'Громадный')
-                .setValue(this.size)
-                .onChange(value => this.size = value));
+            .addDropdown(dropdown => {
+                // ОБНОВЛЕНО: используем константы из DnDConstants
+                CREATURE_SIZES.forEach(size => {
+                    dropdown.addOption(size.value, size.label);
+                });
+                dropdown.setValue(this.size)
+                    .onChange(value => this.size = value);
+            });
 
+        // Мировоззрение - ОБНОВЛЕНО: используем константы
         new Setting(contentEl)
             .setName('Мировоззрение')
             .setDesc('Мировоззрение существа')
-            .addDropdown(dropdown => dropdown
-                .addOption('Без мировоззрения', 'Без мировоззрения')
-                .addOption('Законно-Доброе', 'Законно-Доброе')
-                .addOption('Нейтрально-Доброе', 'Нейтрально-Доброе')
-                .addOption('Хаотично-Доброе', 'Хаотично-Доброе')
-                .addOption('Законно-Нейтральное', 'Законно-Нейтральное')
-                .addOption('Истинно-Нейтральное', 'Истинно-Нейтральное')
-                .addOption('Хаотично-Нейтральное', 'Хаотично-Нейтральное')
-                .addOption('Законно-Злое', 'Законно-Злое')
-                .addOption('Нейтрально-Злое', 'Нейтрально-Злое')
-                .addOption('Хаотично-Злое', 'Хаотично-Злое')
-                .setValue(this.alignment)
-                .onChange(value => this.alignment = value));
+            .addDropdown(dropdown => {
+                // ОБНОВЛЕНО: используем константы из DnDConstants
+                ALIGNMENTS.forEach(alignment => {
+                    dropdown.addOption(alignment.value, alignment.label);
+                });
+                dropdown.setValue(this.alignment)
+                    .onChange(value => this.alignment = value);
+            });
 
         new Setting(contentEl)
             .setName('Класс брони (AC)')
@@ -461,7 +457,6 @@ export class CreatureCreationModal extends Modal {
                 dropdown.setDisabled(false);
                 dropdown.addOption('', 'Выберите тип урона...');
                 
-                // ИСПРАВЛЕНО: добавлен тип для damageType
                 DAMAGE_TYPES.forEach((damageType: DamageType) => {
                     dropdown.addOption(damageType, damageType);
                 });
@@ -486,7 +481,6 @@ export class CreatureCreationModal extends Modal {
                 dropdown.setDisabled(false);
                 dropdown.addOption('', 'Выберите тип урона...');
                 
-                // ИСПРАВЛЕНО: добавлен тип для damageType
                 DAMAGE_TYPES.forEach((damageType: DamageType) => {
                     dropdown.addOption(damageType, damageType);
                 });
@@ -511,7 +505,6 @@ export class CreatureCreationModal extends Modal {
                 dropdown.setDisabled(false);
                 dropdown.addOption('', 'Выберите тип урона...');
                 
-                // ИСПРАВЛЕНО: добавлен тип для damageType
                 DAMAGE_TYPES.forEach((damageType: DamageType) => {
                     dropdown.addOption(damageType, damageType);
                 });
@@ -536,7 +529,6 @@ export class CreatureCreationModal extends Modal {
                 dropdown.setDisabled(false);
                 dropdown.addOption('', 'Выберите состояние...');
                 
-                // ИСПРАВЛЕНО: добавлен тип для condition
                 CONDITION_NAMES.forEach((condition: string) => {
                     dropdown.addOption(condition, condition);
                 });
