@@ -1,5 +1,6 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
 import { Creature } from 'src/models/Bestiary';
+import { DAMAGE_TYPES, CONDITION_NAMES, DamageType } from 'src/constants/DnDConstants';
 
 export class CreatureCreationModal extends Modal {
     bestiaryService: any;
@@ -16,8 +17,12 @@ export class CreatureCreationModal extends Modal {
     initiative: number = 0;
     proficiency_bonus: number = 2;
     characteristics: number[] = [10, 10, 10, 10, 10, 10];
-    saving_throws_proficiency: boolean[] = [false, false, false, false, false, false]; // Владение спасбросками
+    saving_throws_proficiency: boolean[] = [false, false, false, false, false, false];
     skills: string = '';
+    damage_resistances: string[] = [];
+    damage_vulnerabilities: string[] = [];
+    damage_immunities: string[] = [];
+    condition_immunities: string[] = [];
     senses: string = '';
     languages: string = '';
     habitat: string = '';
@@ -75,8 +80,12 @@ export class CreatureCreationModal extends Modal {
                         initiative: this.initiative,
                         proficiency_bonus: this.proficiency_bonus,
                         characteristics: this.characteristics,
-                        saving_throws: saving_throws, // Сохраняем числовые значения
+                        saving_throws: saving_throws,
                         skills: this.skills,
+                        damage_resistances: this.damage_resistances,
+                        damage_vulnerabilities: this.damage_vulnerabilities,
+                        damage_immunities: this.damage_immunities,
+                        condition_immunities: this.condition_immunities,
                         senses: this.senses,
                         languages: this.languages,
                         habitat: this.habitat,
@@ -194,11 +203,11 @@ export class CreatureCreationModal extends Modal {
             .setName('Инициатива')
             .setDesc('Бонус инициативы (рассчитывается автоматически как модификатор ловкости)')
             .addText(text => {
-                this.initiativeInput = text.inputEl; // Сохраняем ссылку на поле
+                this.initiativeInput = text.inputEl;
                 text.setPlaceholder('+0')
                     .setValue(this.formatModifier(this.calculateInitiative()))
-                    .setDisabled(true); // readonly поле
-                this.initiative = this.calculateInitiative(); // Инициализируем значение
+                    .setDisabled(true);
+                this.initiative = this.calculateInitiative();
             });
         
         new Setting(contentEl)
@@ -211,7 +220,7 @@ export class CreatureCreationModal extends Modal {
                     const numValue = Number(value);
                     if (!isNaN(numValue) && numValue >= 0) {
                         this.proficiency_bonus = numValue;
-                        this.updateSavingThrowsFields(); // Обновляем спасброски при изменении бонуса
+                        this.updateSavingThrowsFields();
                     }
                 }));
 
@@ -231,7 +240,7 @@ export class CreatureCreationModal extends Modal {
 
     // Метод для расчета инициативы (модификатор ловкости)
     private calculateInitiative(): number {
-        const dexModifier = this.calculateModifier(this.characteristics[1]); // characteristics[1] = ловкость
+        const dexModifier = this.calculateModifier(this.characteristics[1]);
         return dexModifier;
     }
 
@@ -440,6 +449,225 @@ export class CreatureCreationModal extends Modal {
         }
     }
 
+    // НОВЫЙ МЕТОД: рендер иммунитетов и сопротивлений
+    renderImmunitiesAndResistances(contentEl: HTMLElement) {
+        contentEl.createEl('h3', { text: 'Иммунитеты и сопротивления' });
+
+        // Сопротивления урону
+        new Setting(contentEl)
+            .setName('Сопротивления урону')
+            .setDesc('Типы урона, к которым существо имеет сопротивление (половина урона)')
+            .addDropdown(dropdown => {
+                dropdown.setDisabled(false);
+                dropdown.addOption('', 'Выберите тип урона...');
+                
+                // ИСПРАВЛЕНО: добавлен тип для damageType
+                DAMAGE_TYPES.forEach((damageType: DamageType) => {
+                    dropdown.addOption(damageType, damageType);
+                });
+                
+                dropdown.onChange((value: string) => {
+                    if (value && !this.damage_resistances.includes(value)) {
+                        this.damage_resistances.push(value);
+                        this.updateSelectedValues('damage-resistances-list', this.damage_resistances);
+                    }
+                    dropdown.setValue('');
+                });
+            });
+
+        // Список выбранных сопротивлений
+        this.renderSelectedValuesList(contentEl, 'damage-resistances-list', 'Выбранные сопротивления:', this.damage_resistances);
+
+        // Уязвимости к урону
+        new Setting(contentEl)
+            .setName('Уязвимости к урону')
+            .setDesc('Типы урона, к которым существо имеет уязвимость (двойной урон)')
+            .addDropdown(dropdown => {
+                dropdown.setDisabled(false);
+                dropdown.addOption('', 'Выберите тип урона...');
+                
+                // ИСПРАВЛЕНО: добавлен тип для damageType
+                DAMAGE_TYPES.forEach((damageType: DamageType) => {
+                    dropdown.addOption(damageType, damageType);
+                });
+                
+                dropdown.onChange((value: string) => {
+                    if (value && !this.damage_vulnerabilities.includes(value)) {
+                        this.damage_vulnerabilities.push(value);
+                        this.updateSelectedValues('damage-vulnerabilities-list', this.damage_vulnerabilities);
+                    }
+                    dropdown.setValue('');
+                });
+            });
+
+        // Список выбранных уязвимостей
+        this.renderSelectedValuesList(contentEl, 'damage-vulnerabilities-list', 'Выбранные уязвимости:', this.damage_vulnerabilities);
+
+        // Иммунитеты к урону
+        new Setting(contentEl)
+            .setName('Иммунитеты к урону')
+            .setDesc('Типы урона, к которым существо имеет иммунитет (нулевой урон)')
+            .addDropdown(dropdown => {
+                dropdown.setDisabled(false);
+                dropdown.addOption('', 'Выберите тип урона...');
+                
+                // ИСПРАВЛЕНО: добавлен тип для damageType
+                DAMAGE_TYPES.forEach((damageType: DamageType) => {
+                    dropdown.addOption(damageType, damageType);
+                });
+                
+                dropdown.onChange((value: string) => {
+                    if (value && !this.damage_immunities.includes(value)) {
+                        this.damage_immunities.push(value);
+                        this.updateSelectedValues('damage-immunities-list', this.damage_immunities);
+                    }
+                    dropdown.setValue('');
+                });
+            });
+
+        // Список выбранных иммунитетов к урону
+        this.renderSelectedValuesList(contentEl, 'damage-immunities-list', 'Выбранные иммунитеты к урону:', this.damage_immunities);
+
+        // Иммунитеты к состояниям
+        new Setting(contentEl)
+            .setName('Иммунитеты к состояниям')
+            .setDesc('Состояния, к которым существо имеет иммунитет')
+            .addDropdown(dropdown => {
+                dropdown.setDisabled(false);
+                dropdown.addOption('', 'Выберите состояние...');
+                
+                // ИСПРАВЛЕНО: добавлен тип для condition
+                CONDITION_NAMES.forEach((condition: string) => {
+                    dropdown.addOption(condition, condition);
+                });
+                
+                dropdown.onChange((value: string) => {
+                    if (value && !this.condition_immunities.includes(value)) {
+                        this.condition_immunities.push(value);
+                        this.updateSelectedValues('condition-immunities-list', this.condition_immunities);
+                    }
+                    dropdown.setValue('');
+                });
+            });
+
+        // Список выбранных иммунитетов к состояниям
+        this.renderSelectedValuesList(contentEl, 'condition-immunities-list', 'Выбранные иммунитеты к состояниям:', this.condition_immunities);
+    }
+
+    // НОВЫЙ МЕТОД: рендер списка выбранных значений
+    private renderSelectedValuesList(container: HTMLElement, listId: string, title: string, values: string[]) {
+        const listContainer = container.createDiv({ cls: 'selected-values-container' });
+        listContainer.createEl('div', { 
+            text: title,
+            cls: 'selected-values-title'
+        });
+        
+        const listEl = listContainer.createDiv({ 
+            cls: 'selected-values-list',
+            attr: { id: listId }
+        });
+        
+        this.updateSelectedValues(listId, values);
+    }
+
+    // НОВЫЙ МЕТОД: обновление списка выбранных значений
+    private updateSelectedValues(listId: string, values: string[]) {
+        const listEl = this.containerEl.querySelector(`#${listId}`);
+        if (!listEl) return;
+        
+        listEl.empty();
+        
+        if (values.length === 0) {
+            listEl.createEl('div', { 
+                text: 'Не выбрано',
+                cls: 'selected-values-empty'
+            });
+            return;
+        }
+        
+        values.forEach((value, index) => {
+            const valueItem = listEl.createDiv({ cls: 'selected-value-item' });
+            valueItem.createEl('span', { text: value });
+            
+            const removeBtn = valueItem.createEl('button', {
+                text: '×',
+                cls: 'selected-value-remove'
+            });
+            
+            removeBtn.addEventListener('click', () => {
+                values.splice(index, 1);
+                this.updateSelectedValues(listId, values);
+            });
+        });
+    }
+
+    // ОБНОВЛЕННЫЙ МЕТОД: рендер дополнительных полей
+    renderAdditionalFields(contentEl: HTMLElement) {
+        contentEl.createEl('h3', { text: 'Дополнительные характеристики' });
+
+        new Setting(contentEl)
+            .setName('Навыки')
+            .setDesc('Навыки существа')
+            .addTextArea(text => text
+                .setPlaceholder('Восприятие +2, Скрытность +4')
+                .setValue(this.skills)
+                .onChange(value => this.skills = value));
+
+        // Новые поля иммунитетов и сопротивлений
+        this.renderImmunitiesAndResistances(contentEl);
+
+        new Setting(contentEl)
+            .setName('Чувства')
+            .setDesc('Особые чувства')
+            .addTextArea(text => text
+                .setPlaceholder('Тёмное зрение 60 ft., пассивное Восприятие 12')
+                .setValue(this.senses)
+                .onChange(value => this.senses = value));
+
+        new Setting(contentEl)
+            .setName('Языки')
+            .setDesc('Известные языки')
+            .addTextArea(text => text
+                .setPlaceholder('Общий, Драконий')
+                .setValue(this.languages)
+                .onChange(value => this.languages = value));
+
+        new Setting(contentEl)
+            .setName('Черты')
+            .setDesc('Особые черты и способности')
+            .addTextArea(text => text
+                .setPlaceholder('Сопротивление огню, Легендарное сопротивление (3/день)')
+                .setValue(this.traits)
+                .onChange(value => this.traits = value));
+
+        new Setting(contentEl)
+            .setName('Действия')
+            .setDesc('Боевые действия')
+            .addTextArea(text => text
+                .setPlaceholder('Укус: +5 к попаданию, 10 (2к6 + 3) колющего урона')
+                .setValue(this.actions)
+                .onChange(value => this.actions = value));
+
+        new Setting(contentEl)
+            .setName('Легендарные действия')
+            .setDesc('Легендарные действия')
+            .addTextArea(text => text
+                .setPlaceholder('Существо может совершить 3 легендарных действия...')
+                .setValue(this.legendaryActions)
+                .onChange(value => this.legendaryActions = value));
+
+        new Setting(contentEl)
+            .setName('Заметки')
+            .setDesc('Дополнительные заметки')
+            .addTextArea(text => text
+                .setPlaceholder('Особое поведение, тактика боя и т.д.')
+                .setValue(this.notes)
+                .onChange(value => this.notes = value));
+
+        // Добавляем CSS стили для новых элементов
+        this.addImmunitiesStyles(contentEl);
+    }
+
     // Метод для добавления CSS стилей характеристик
     private addHorizontalAbilitiesStyles(contentEl: HTMLElement) {
         const style = contentEl.createEl('style');
@@ -569,63 +797,65 @@ export class CreatureCreationModal extends Modal {
         `;
     }
 
-    renderAdditionalFields(contentEl: HTMLElement) {
-        contentEl.createEl('h3', { text: 'Дополнительные характеристики' });
-
-        new Setting(contentEl)
-            .setName('Навыки')
-            .setDesc('Навыки существа')
-            .addTextArea(text => text
-                .setPlaceholder('Восприятие +2, Скрытность +4')
-                .setValue(this.skills)
-                .onChange(value => this.skills = value));
-
-        new Setting(contentEl)
-            .setName('Чувства')
-            .setDesc('Особые чувства')
-            .addTextArea(text => text
-                .setPlaceholder('Тёмное зрение 60 ft., пассивное Восприятие 12')
-                .setValue(this.senses)
-                .onChange(value => this.senses = value));
-
-        new Setting(contentEl)
-            .setName('Языки')
-            .setDesc('Известные языки')
-            .addTextArea(text => text
-                .setPlaceholder('Общий, Драконий')
-                .setValue(this.languages)
-                .onChange(value => this.languages = value));
-
-        new Setting(contentEl)
-            .setName('Черты')
-            .setDesc('Особые черты и способности')
-            .addTextArea(text => text
-                .setPlaceholder('Сопротивление огню, Легендарное сопротивление (3/день)')
-                .setValue(this.traits)
-                .onChange(value => this.traits = value));
-
-        new Setting(contentEl)
-            .setName('Действия')
-            .setDesc('Боевые действия')
-            .addTextArea(text => text
-                .setPlaceholder('Укус: +5 к попаданию, 10 (2к6 + 3) колющего урона')
-                .setValue(this.actions)
-                .onChange(value => this.actions = value));
-
-        new Setting(contentEl)
-            .setName('Легендарные действия')
-            .setDesc('Легендарные действия')
-            .addTextArea(text => text
-                .setPlaceholder('Существо может совершить 3 легендарных действия...')
-                .setValue(this.legendaryActions)
-                .onChange(value => this.legendaryActions = value));
-
-        new Setting(contentEl)
-            .setName('Заметки')
-            .setDesc('Дополнительные заметки')
-            .addTextArea(text => text
-                .setPlaceholder('Особое поведение, тактика боя и т.д.')
-                .setValue(this.notes)
-                .onChange(value => this.notes = value));
+    // НОВЫЙ МЕТОД: добавление CSS стилей для иммунитетов
+    private addImmunitiesStyles(contentEl: HTMLElement) {
+        const style = contentEl.createEl('style');
+        style.textContent = `
+            .selected-values-container {
+                margin-bottom: 15px;
+                border: 1px solid var(--background-modifier-border);
+                border-radius: 4px;
+                padding: 10px;
+                background: var(--background-secondary);
+            }
+            
+            .selected-values-title {
+                font-weight: bold;
+                margin-bottom: 8px;
+                color: var(--text-normal);
+                font-size: 14px;
+            }
+            
+            .selected-values-list {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .selected-value-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 8px;
+                background: var(--background-primary);
+                border-radius: 3px;
+                border: 1px solid var(--background-modifier-border);
+            }
+            
+            .selected-value-remove {
+                background: var(--background-modifier-error);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .selected-value-remove:hover {
+                background: var(--background-modifier-error-hover);
+            }
+            
+            .selected-values-empty {
+                color: var(--text-muted);
+                font-style: italic;
+                text-align: center;
+                padding: 10px;
+            }
+        `;
     }
 }

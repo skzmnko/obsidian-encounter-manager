@@ -12,6 +12,10 @@ export interface Creature {
     characteristics: number[];
     saving_throws: number[];
     skills: string;
+    damage_resistances: string[];
+    damage_vulnerabilities: string[];
+    damage_immunities: string[];
+    condition_immunities: string[];
     senses: string;
     languages: string;
     habitat: string;
