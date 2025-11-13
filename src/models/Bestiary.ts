@@ -1,3 +1,7 @@
+export interface CreatureTrait {
+    name: string;
+    desc: string;
+}
 export interface Creature {
     id: string;
     name: string;
@@ -19,7 +23,7 @@ export interface Creature {
     senses: string;
     languages: string;
     habitat: string;
-    traits: string;
+    traits: CreatureTrait[];
     actions: string;
     legendaryActions: string;
     notes: string;

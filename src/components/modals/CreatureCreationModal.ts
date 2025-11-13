@@ -1,5 +1,5 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
-import { Creature } from 'src/models/Bestiary';
+import { Creature, CreatureTrait } from 'src/models/Bestiary';
 import { DAMAGE_TYPES, CONDITION_NAMES, CREATURE_SIZES, ALIGNMENTS, DamageType } from 'src/constants/Constants';
 
 export class CreatureCreationModal extends Modal {
@@ -26,10 +26,14 @@ export class CreatureCreationModal extends Modal {
     senses: string = '';
     languages: string = '';
     habitat: string = '';
-    traits: string = '';
+    traits: CreatureTrait[] = [];
     actions: string = '';
     legendaryActions: string = '';
     notes: string = '';
+
+    // Поля для новой черты
+    private newTraitName: string = '';
+    private newTraitDesc: string = '';
 
     private initiativeInput: HTMLInputElement | null = null;
 
@@ -145,12 +149,11 @@ export class CreatureCreationModal extends Modal {
                 .setPlaceholder('Дракон')
                 .onChange(value => this.type = value));
 
-        // Размер - ОБНОВЛЕНО: используем константы
+        // Размер
         new Setting(contentEl)
             .setName('Размер')
             .setDesc('Размер существа')
             .addDropdown(dropdown => {
-                // ОБНОВЛЕНО: используем константы из DnDConstants
                 CREATURE_SIZES.forEach(size => {
                     dropdown.addOption(size.value, size.label);
                 });
@@ -158,12 +161,11 @@ export class CreatureCreationModal extends Modal {
                     .onChange(value => this.size = value);
             });
 
-        // Мировоззрение - ОБНОВЛЕНО: используем константы
+        // Мировоззрение
         new Setting(contentEl)
             .setName('Мировоззрение')
             .setDesc('Мировоззрение существа')
             .addDropdown(dropdown => {
-                // ОБНОВЛЕНО: используем константы из DnDConstants
                 ALIGNMENTS.forEach(alignment => {
                     dropdown.addOption(alignment.value, alignment.label);
                 });
@@ -445,7 +447,7 @@ export class CreatureCreationModal extends Modal {
         }
     }
 
-    // НОВЫЙ МЕТОД: рендер иммунитетов и сопротивлений
+    // ВОССТАНОВЛЕННЫЙ МЕТОД: рендер иммунитетов и сопротивлений (старый стиль)
     renderImmunitiesAndResistances(contentEl: HTMLElement) {
         contentEl.createEl('h3', { text: 'Иммунитеты и сопротивления' });
 
@@ -593,6 +595,126 @@ export class CreatureCreationModal extends Modal {
         });
     }
 
+    // НОВЫЙ МЕТОД: рендер поля черт
+    renderTraitsField(contentEl: HTMLElement) {
+        contentEl.createEl('h3', { text: 'Черты' });
+
+        // Контейнер для добавления новой черты
+        const addTraitContainer = contentEl.createDiv({ cls: 'add-trait-container' });
+        
+        // Поле для названия черты
+        new Setting(addTraitContainer)
+            .setName('Название черты')
+            .setDesc('Название особой черты или способности')
+            .addText(text => text
+                .setPlaceholder('Амфибия')
+                .onChange(value => this.newTraitName = value));
+
+        // Поле для описания черты
+        new Setting(addTraitContainer)
+            .setName('Описание черты')
+            .setDesc('Подробное описание черты')
+            .addTextArea(text => text
+                .setPlaceholder('Существо может дышать как воздухом, так и водой...')
+                .onChange(value => this.newTraitDesc = value));
+
+        // Кнопка добавления черты
+        new Setting(addTraitContainer)
+            .addButton(btn => btn
+                .setButtonText('Добавить черту')
+                .setCta()
+                .onClick(() => {
+                    if (!this.newTraitName.trim()) {
+                        new Notice('Пожалуйста, введите название черты');
+                        return;
+                    }
+
+                    if (this.traits.length >= 10) {
+                        new Notice('Достигнуто максимальное количество черт (10)');
+                        return;
+                    }
+
+                    const newTrait: CreatureTrait = {
+                        name: this.newTraitName,
+                        desc: this.newTraitDesc
+                    };
+
+                    this.traits.push(newTrait);
+                    
+                    // Очищаем поля ввода
+                    this.newTraitName = '';
+                    this.newTraitDesc = '';
+                    
+                    // Обновляем поля ввода
+                    const nameInput = addTraitContainer.querySelector('input[placeholder="Амфибия"]') as HTMLInputElement;
+                    const descInput = addTraitContainer.querySelector('textarea') as HTMLTextAreaElement;
+                    if (nameInput) nameInput.value = '';
+                    if (descInput) descInput.value = '';
+
+                    this.updateTraitsList();
+                    new Notice(`Черта "${newTrait.name}" добавлена`);
+                }));
+
+        // Список добавленных черт
+        this.renderTraitsList(contentEl);
+
+        // Добавляем CSS стили для черт
+        this.addTraitsStyles(contentEl);
+    }
+
+    // НОВЫЙ МЕТОД: рендер списка черт
+    private renderTraitsList(container: HTMLElement) {
+        const traitsListContainer = container.createDiv({ cls: 'traits-list-container' });
+        traitsListContainer.createEl('div', { 
+            text: 'Добавленные черты:',
+            cls: 'traits-list-title'
+        });
+        
+        const traitsListEl = traitsListContainer.createDiv({ 
+            cls: 'traits-list',
+            attr: { id: 'traits-list' }
+        });
+        
+        this.updateTraitsList();
+    }
+
+    // НОВЫЙ МЕТОД: обновление списка черт
+    private updateTraitsList() {
+        const traitsListEl = this.containerEl.querySelector('#traits-list');
+        if (!traitsListEl) return;
+        
+        traitsListEl.empty();
+        
+        if (this.traits.length === 0) {
+            traitsListEl.createEl('div', { 
+                text: 'Черты не добавлены',
+                cls: 'traits-empty'
+            });
+            return;
+        }
+        
+        this.traits.forEach((trait, index) => {
+            const traitItem = traitsListEl.createDiv({ cls: 'trait-item' });
+            
+            const traitHeader = traitItem.createDiv({ cls: 'trait-header' });
+            traitHeader.createEl('strong', { text: trait.name });
+            
+            const traitDesc = traitItem.createDiv({ cls: 'trait-desc' });
+            traitDesc.setText(trait.desc);
+            
+            const removeBtn = traitItem.createEl('button', {
+                text: 'Удалить',
+                cls: 'trait-remove mod-warning'
+            });
+            
+            removeBtn.addEventListener('click', () => {
+                this.traits.splice(index, 1);
+                this.updateTraitsList();
+                new Notice(`Черта "${trait.name}" удалена`);
+            });
+        });
+    }
+
     // ОБНОВЛЕННЫЙ МЕТОД: рендер дополнительных полей
     renderAdditionalFields(contentEl: HTMLElement) {
         contentEl.createEl('h3', { text: 'Дополнительные характеристики' });
@@ -624,13 +746,8 @@ export class CreatureCreationModal extends Modal {
                 .setValue(this.languages)
                 .onChange(value => this.languages = value));
 
-        new Setting(contentEl)
-            .setName('Черты')
-            .setDesc('Особые черты и способности')
-            .addTextArea(text => text
-                .setPlaceholder('Сопротивление огню, Легендарное сопротивление (3/день)')
-                .setValue(this.traits)
-                .onChange(value => this.traits = value));
+        // ОБНОВЛЕНО: заменяем старое поле черт на новую структуру
+        this.renderTraitsField(contentEl);
 
         new Setting(contentEl)
             .setName('Действия')
@@ -655,9 +772,6 @@ export class CreatureCreationModal extends Modal {
                 .setPlaceholder('Особое поведение, тактика боя и т.д.')
                 .setValue(this.notes)
                 .onChange(value => this.notes = value));
-
-        // Добавляем CSS стили для новых элементов
-        this.addImmunitiesStyles(contentEl);
     }
 
     // Метод для добавления CSS стилей характеристик
@@ -847,6 +961,72 @@ export class CreatureCreationModal extends Modal {
                 font-style: italic;
                 text-align: center;
                 padding: 10px;
+            }
+        `;
+    }
+
+    // НОВЫЙ МЕТОД: добавление CSS стилей для черт
+    private addTraitsStyles(contentEl: HTMLElement) {
+        const style = contentEl.createEl('style');
+        style.textContent = `
+            .add-trait-container {
+                margin-bottom: 20px;
+                border: 1px solid var(--background-modifier-border);
+                border-radius: 4px;
+                padding: 15px;
+                background: var(--background-secondary);
+            }
+            
+            .traits-list-container {
+                margin-bottom: 20px;
+            }
+            
+            .traits-list-title {
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: var(--text-normal);
+                font-size: 14px;
+            }
+            
+            .traits-list {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .trait-item {
+                border: 1px solid var(--background-modifier-border);
+                border-radius: 4px;
+                padding: 10px;
+                background: var(--background-primary);
+                position: relative;
+            }
+            
+            .trait-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 5px;
+            }
+            
+            .trait-desc {
+                color: var(--text-muted);
+                font-size: 14px;
+                line-height: 1.4;
+                margin-bottom: 8px;
+            }
+            
+            .trait-remove {
+                margin-top: 5px;
+            }
+            
+            .traits-empty {
+                color: var(--text-muted);
+                font-style: italic;
+                text-align: center;
+                padding: 20px;
+                border: 1px dashed var(--background-modifier-border);
+                border-radius: 4px;
             }
         `;
     }
