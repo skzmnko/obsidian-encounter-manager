@@ -29,7 +29,9 @@ export interface Creature {
     habitat: string;
     traits: CreatureTrait[];
     actions: CreatureAction[];
-    legendaryActions: string;
+    bonus_actions: CreatureAction[];
+    reactions: CreatureAction[];
+    legendary_actions: CreatureAction[];
     notes: string;
     created: number;
     updated: number;

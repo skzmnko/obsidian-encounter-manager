@@ -7,6 +7,9 @@ import { AbilityScoresComponent } from 'src/components/modals/components/Ability
 import { ImmunitiesComponent } from 'src/components/modals/components/ImmunitiesComponent';
 import { TraitsComponent } from 'src/components/modals/components/TraitsComponent';
 import { ActionsComponent } from 'src/components/modals/components/ActionsComponent';
+import { BonusActionsComponent } from 'src/components/modals/components/BonusActionsComponent';
+import { ReactionsComponent } from 'src/components/modals/components/ReactionsComponent';
+import { LegendaryActionsComponent } from 'src/components/modals/components/LegendaryActionsComponent';
 import { AdditionalFieldsComponent } from 'src/components/modals/components/AdditionalFieldsComponent';
 
 export class CreatureCreationModal extends Modal {
@@ -15,6 +18,9 @@ export class CreatureCreationModal extends Modal {
     private immunities: ImmunitiesComponent;
     private traits: TraitsComponent;
     private actions: ActionsComponent;
+    private bonusActions: BonusActionsComponent;
+    private reactions: ReactionsComponent;
+    private legendaryActions: LegendaryActionsComponent;
     private additionalFields: AdditionalFieldsComponent;
 
     constructor(
@@ -29,6 +35,9 @@ export class CreatureCreationModal extends Modal {
         this.immunities = new ImmunitiesComponent();
         this.traits = new TraitsComponent();
         this.actions = new ActionsComponent();
+        this.bonusActions = new BonusActionsComponent();
+        this.reactions = new ReactionsComponent();
+        this.legendaryActions = new LegendaryActionsComponent();
         this.additionalFields = new AdditionalFieldsComponent();
     }
 
@@ -75,6 +84,15 @@ export class CreatureCreationModal extends Modal {
 
         // Действия
         this.actions.render(contentEl);
+
+        // Бонусные действия
+        this.bonusActions.render(contentEl);
+
+        // Реакции
+        this.reactions.render(contentEl);
+
+        // Легендарные действия
+        this.legendaryActions.render(contentEl);
     }
 
     private renderSaveButtons(contentEl: HTMLElement) {
@@ -116,7 +134,9 @@ export class CreatureCreationModal extends Modal {
             habitat: this.basicFields.getHabitat(),
             traits: this.traits.getTraits(),
             actions: this.actions.getActions(),
-            legendaryActions: this.additionalFields.getLegendaryActions(),
+            bonus_actions: this.bonusActions.getBonusActions(),
+            reactions: this.reactions.getReactions(),
+            legendary_actions: this.legendaryActions.getLegendaryActions(),
             notes: this.additionalFields.getNotes()
         };
 
