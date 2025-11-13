@@ -60,11 +60,14 @@ export class BasicFieldsComponent {
         new Setting(section)
             .setName('Языки')
             .setDesc('Известные языки')
-            .addTextArea(text => text
-                .setPlaceholder('Общий, Драконий')
+            .addTextArea(text => {
+                text.setPlaceholder('Общий, Драконий')
                 .setValue(this.languages)
-                .onChange(value => this.languages = value));
-    }
+                .onChange(value => this.languages = value);
+                text.inputEl.addClass('languages-textarea');
+                text.inputEl.addClass('fixed-textarea');
+            });
+        }
 
     // Геттеры
     getName(): string { return this.name; }

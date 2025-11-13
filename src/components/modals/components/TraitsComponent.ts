@@ -27,9 +27,12 @@ export class TraitsComponent {
         new Setting(addTraitContainer)
             .setName('Описание черты')
             .setDesc('Подробное описание черты')
-            .addTextArea(text => text
-                .setPlaceholder('Существо может дышать как воздухом, так и водой...')
-                .onChange(value => this.newTraitDesc = value));
+            .addTextArea(text => {
+                text.setPlaceholder('Существо может дышать как воздухом, так и водой...')
+                .onChange(value => this.newTraitDesc = value);
+                text.inputEl.addClass('trait-desc-textarea');
+                text.inputEl.addClass('wide-textarea');
+        });
 
         new Setting(addTraitContainer)
             .addButton(btn => btn

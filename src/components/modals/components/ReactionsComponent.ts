@@ -27,9 +27,12 @@ export class ReactionsComponent {
         new Setting(addReactionContainer)
             .setName('Описание реакции')
             .setDesc('Подробное описание реакции и её условий срабатывания')
-            .addTextArea(text => text
-                .setPlaceholder('Когда существо получает удар в ближнем бою...')
-                .onChange(value => this.newReactionDesc = value));
+            .addTextArea(text => {
+                text.setPlaceholder('Когда существо получает удар в ближнем бою...')
+                .onChange(value => this.newReactionDesc = value);
+                text.inputEl.addClass('reaction-desc-textarea');
+                text.inputEl.addClass('wide-textarea');
+            });
 
         new Setting(addReactionContainer)
             .addButton(btn => btn

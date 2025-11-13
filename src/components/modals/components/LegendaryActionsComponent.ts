@@ -27,9 +27,12 @@ export class LegendaryActionsComponent {
         new Setting(addLegendaryActionContainer)
             .setName('Описание легендарного действия')
             .setDesc('Подробное описание легендарного действия и его эффектов')
-            .addTextArea(text => text
-                .setPlaceholder('Существо может совершить одно легендарное действие в конце хода другого существа...')
-                .onChange(value => this.newLegendaryActionDesc = value));
+            .addTextArea(text => {
+                text.setPlaceholder('Существо может совершить одно легендарное действие в конце хода другого существа...')
+                .onChange(value => this.newLegendaryActionDesc = value);
+                text.inputEl.addClass('legendary-action-desc-textarea');
+                text.inputEl.addClass('wide-textarea');
+            });
 
         new Setting(addLegendaryActionContainer)
             .addButton(btn => btn

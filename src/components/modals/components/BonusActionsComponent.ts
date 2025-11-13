@@ -27,9 +27,12 @@ export class BonusActionsComponent {
         new Setting(addBonusActionContainer)
             .setName('Описание бонусного действия')
             .setDesc('Подробное описание бонусного действия и его эффектов')
-            .addTextArea(text => text
-                .setPlaceholder('Существо может совершить одно бонусное действие...')
-                .onChange(value => this.newBonusActionDesc = value));
+            .addTextArea(text => {
+                text.setPlaceholder('Существо может совершить одно бонусное действие...')
+                .onChange(value => this.newBonusActionDesc = value);
+                text.inputEl.addClass('bonus-action-desc-textarea');
+                text.inputEl.addClass('wide-textarea');
+            });
 
         new Setting(addBonusActionContainer)
             .addButton(btn => btn

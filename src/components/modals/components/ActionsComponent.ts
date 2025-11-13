@@ -27,9 +27,12 @@ export class ActionsComponent {
         new Setting(addActionContainer)
             .setName('Описание действия')
             .setDesc('Подробное описание действия и его эффектов')
-            .addTextArea(text => text
-                .setPlaceholder('Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) piercing damage.')
-                .onChange(value => this.newActionDesc = value));
+            .addTextArea(text => {
+                text.setPlaceholder('Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) piercing damage.')
+                .onChange(value => this.newActionDesc = value);
+                text.inputEl.addClass('action-desc-textarea');
+                text.inputEl.addClass('wide-textarea');
+            });
 
         new Setting(addActionContainer)
             .addButton(btn => btn

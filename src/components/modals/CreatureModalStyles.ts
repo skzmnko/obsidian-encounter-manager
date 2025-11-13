@@ -224,4 +224,38 @@ export const CreatureModalStyles = `
     padding-bottom: 15px;
     border-bottom: 1px solid var(--background-modifier-border);
 }
+
+/* Стили для текстовых областей с фиксированным размером */
+.fixed-textarea {
+    resize: none !important;
+    min-height: 80px !important;
+    width: 100% !important;
+}
+
+/* Стили для широких текстовых областей */
+.wide-textarea {
+    resize: none !important;
+    min-height: 100px !important;
+    width: 100% !important;
+}
+
+/* Специфичные стили для различных типов полей */
+.languages-textarea,
+.skills-textarea,
+.senses-textarea,
+.notes-textarea {
+    resize: none !important;
+    min-height: 60px !important;
+    width: 100% !important;
+}
+
+.trait-desc-textarea,
+.action-desc-textarea,
+.bonus-action-desc-textarea,
+.reaction-desc-textarea,
+.legendary-action-desc-textarea {
+    resize: none !important;
+    min-height: 100px !important;
+    width: 100% !important;
+}
 `;
