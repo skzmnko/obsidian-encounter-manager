@@ -1,14 +1,14 @@
 {
-  "name": "obsidian-encounter-manager",
-  "version": "0.1.0",
-  "description": "A plugin for managing D&D encounters in Obsidian",
+  "name": "dnd-tools",
+  "version": "0.34.0",
+  "description": "Comprehensive D&D toolkit for Obsidian - bestiary, encounters, spells managemen",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "node esbuild.config.mjs production",
     "version": "node version-bump.mjs"
   },
-  "keywords": ["obsidian", "plugin", "dnd", "encounter", "combat"],
+  "keywords": ["obsidian", "plugin", "dnd", "d&d", "tools", "bestiary", "encounters", "spells"],
   "author": "skzmnko",
   "license": "MIT",
   "devDependencies": {

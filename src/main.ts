@@ -5,16 +5,16 @@ import { BestiaryPanel, BESTIARY_VIEW_TYPE } from 'src/components/panels/Bestiar
 import { EncounterService } from 'src/services/EncounterService';
 import { UIService } from 'src/services/UIService';
 import { EncounterTypeModal } from 'src/components/modals/EncounterTypeModal';
-import { EncounterManagerSettingTab } from 'src/components/settings/EncounterManagerSettingTab';
+import { DnDToolsSettingTab } from 'src/components/settings/DnDToolsSettingTab';
 
-export default class EncounterManagerPlugin extends Plugin {
+export default class DnDToolsPlugin extends Plugin {
     settings!: EncounterManagerSettings;
     encounterService!: EncounterService;
     uiService!: UIService;
     bestiaryService!: BestiaryService;
 
     async onload() {
-        console.log('Loading Encounter Manager plugin...');
+        console.log('Loading D&D Tools plugin...');
         
         await this.loadSettings();
         
@@ -54,7 +54,7 @@ export default class EncounterManagerPlugin extends Plugin {
                 this.activateBestiaryView();
             });
 
-            this.addSettingTab(new EncounterManagerSettingTab(this.app, this));
+            this.addSettingTab(new DnDToolsSettingTab(this.app, this));
 
             // Регистрируем панель бестиария
             this.registerView(
@@ -68,9 +68,9 @@ export default class EncounterManagerPlugin extends Plugin {
                 );
             });
 
-            console.log('Encounter Manager plugin loaded successfully');
+            console.log('D&D Tools plugin loaded successfully');
         } catch (error) {
-            console.error('Failed to load Encounter Manager plugin:', error);
+            console.error('Failed to load D&D Tools plugin:', error);
         }
     }
 

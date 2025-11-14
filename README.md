@@ -1,13 +1,14 @@
-# Obsidian Encounter Manager
+# D&D Tools
 
-A plugin for managing D&D encounters and combat tracking in Obsidian.
+A comprehensive plugin for managing D&D campaigns in Obsidian - bestiary, encounters, spells and more.
 
 ## Features
 
-- Create and manage encounters
-- Track combat participants (PCs and NPCs)
-- Monitor HP and status effects
-- Embed encounters in notes using code blocks
+- 📖 **Custom Bestiary** - Create and manage custom creatures
+- ⚔️ **Encounter Manager** - Track combat and manage encounters  
+- 🔮 **Spells Database** - Custom spells management (coming soon)
+- 🎯 **Combat Tracking** - Monitor HP, status effects, and initiative
+- 📝 **Embed in Notes** - Use code blocks to embed encounters in your notes
 
 ## Development
 

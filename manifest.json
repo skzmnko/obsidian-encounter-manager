@@ -1,9 +1,9 @@
 {
-  "id": "encounter-manager",
-  "name": "Encounter Manager",
-  "version": "0.3.0",
+  "id": "dnd-tools",
+  "name": "D&D Tools",
+  "version": "0.34.0",
   "minAppVersion": "0.15.0",
-  "description": "Manage D&D encounters, combat tracking, and status effects",
+  "description": "Comprehensive toolkit for D&D campaign management - bestiary, encounters, spells and more",
   "author": "skzmnko",
   "authorUrl": "https://github.com/skzmnko",
   "fundingUrl": "https://buymeacoffee.com/yourusername",

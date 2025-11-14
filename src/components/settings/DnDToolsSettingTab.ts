@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 
-export class EncounterManagerSettingTab extends PluginSettingTab {
+export class DnDToolsSettingTab extends PluginSettingTab {
     plugin: any;
 
     constructor(app: App, plugin: any) {
@@ -12,7 +12,7 @@ export class EncounterManagerSettingTab extends PluginSettingTab {
         const { containerEl } = this;
 
         containerEl.empty();
-        containerEl.createEl('h2', { text: 'Encounter Manager Settings' });
+        containerEl.createEl('h2', { text: 'D&D Tools Settings' });
 
         new Setting(containerEl)
             .setName('Default HP')
