@@ -6,6 +6,7 @@ import { EncounterService } from 'src/services/EncounterService';
 import { UIService } from 'src/services/UIService';
 import { EncounterTypeModal } from 'src/components/modals/EncounterTypeModal';
 import { DnDToolsSettingTab } from 'src/components/settings/DnDToolsSettingTab';
+import { i18n } from 'src/services/LocalizationService';
 
 export default class DnDToolsPlugin extends Plugin {
     settings!: EncounterManagerSettings;
@@ -15,19 +16,16 @@ export default class DnDToolsPlugin extends Plugin {
 
     async onload() {
         console.log('Loading D&D Tools plugin...');
-        
         await this.loadSettings();
+        this.setupLocalization();
         
         try {
-            // Инициализация сервисов
             this.encounterService = new EncounterService(this);
             this.uiService = new UIService(this.app);
             this.bestiaryService = new BestiaryService(this);
-            
             await this.encounterService.initialize();
             await this.bestiaryService.initialize();
 
-            // Команды и UI
             this.addCommand({
                 id: 'create-encounter',
                 name: 'Create new encounter',
@@ -36,7 +34,6 @@ export default class DnDToolsPlugin extends Plugin {
                 }
             });
 
-            // Команда для открытия бестиария
             this.addCommand({
                 id: 'open-bestiary',
                 name: 'Open Bestiary',
@@ -49,14 +46,11 @@ export default class DnDToolsPlugin extends Plugin {
                 new EncounterTypeModal(this.app, this).open();
             });
 
-            // Добавляем иконку для бестиария
             this.addRibbonIcon('feather', 'Open Bestiary', () => {
                 this.activateBestiaryView();
             });
 
             this.addSettingTab(new DnDToolsSettingTab(this.app, this));
-
-            // Регистрируем панель бестиария
             this.registerView(
                 BESTIARY_VIEW_TYPE,
                 (leaf) => new BestiaryPanel(leaf, this.bestiaryService)
@@ -74,15 +68,16 @@ export default class DnDToolsPlugin extends Plugin {
         }
     }
 
-    // Метод для активации панели бестиария
+    private setupLocalization() {
+        i18n.setLocale('en');
+    }
+
      async activateBestiaryView() {
         const { workspace } = this.app;
 
-        // Проверяем, не открыта ли уже панель бестиария
         let leaf = workspace.getLeavesOfType(BESTIARY_VIEW_TYPE)[0];
 
         if (!leaf) {
-            // Создаем новую панель справа
             const rightLeaf = workspace.getRightLeaf(false);
             if (rightLeaf) {
                 leaf = rightLeaf;
@@ -91,7 +86,6 @@ export default class DnDToolsPlugin extends Plugin {
                     active: true,
                 });
             } else {
-                // Если правой панели нет, создаем новую
                 leaf = workspace.getLeaf('tab');
                 await leaf.setViewState({
                     type: BESTIARY_VIEW_TYPE,
@@ -100,7 +94,6 @@ export default class DnDToolsPlugin extends Plugin {
             }
         }
 
-        // Активируем панель
         workspace.revealLeaf(leaf);
     }
 
@@ -112,7 +105,6 @@ export default class DnDToolsPlugin extends Plugin {
         await this.saveData(this.settings);
     }
 
-    // Новый метод для получения пути к папке encounters
     getEncountersFolderPath(): string {
         return `${this.manifest.dir}/encounters`;
     }

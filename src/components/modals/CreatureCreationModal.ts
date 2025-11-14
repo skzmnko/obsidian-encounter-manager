@@ -11,6 +11,7 @@ import { ActionsComponent } from './components/ActionsComponent';
 import { BonusActionsComponent } from './components/BonusActionsComponent';
 import { ReactionsComponent } from './components/ReactionsComponent';
 import { LegendaryActionsComponent } from './components/LegendaryActionsComponent';
+import { i18n } from 'src/services/LocalizationService';
 
 export class CreatureCreationModal extends Modal {
     private basicFields: BasicFieldsComponent;
@@ -45,13 +46,11 @@ export class CreatureCreationModal extends Modal {
 
     onOpen() {
         const { contentEl } = this;
-        contentEl.createEl('h2', { text: 'Добавить существо в бестиарий' });
+        contentEl.createEl('h2', { text: i18n.t('CREATURE_MODAL.TITLE') });
 
         this.applyStyles(contentEl);
         this.renderComponents(contentEl);
         this.renderSaveButtons(contentEl);
-        
-        // Устанавливаем связь между компонентами после рендера
         this.setupComponentConnections();
     }
 
@@ -61,63 +60,43 @@ export class CreatureCreationModal extends Modal {
     }
 
     private setupComponentConnections() {
-        // При изменении бонуса мастерства обновляем спасброски
         this.coreParameters.onProficiencyBonusChange((bonus: number) => {
             this.abilityScores.setProficiencyBonus(bonus);
         });
 
-        // При изменении характеристик обновляем инициативу
         this.abilityScores.onAbilityChange(() => {
             this.coreParameters.updateInitiative(this.abilityScores.getInitiative());
         });
     }
 
     private renderComponents(contentEl: HTMLElement) {
-        // Общая информация
+
         this.basicFields.render(contentEl);
-
-        // Основные параметры
         this.coreParameters.render(contentEl);
-
-        // Характеристики и спасброски
         this.abilityScores.render(contentEl);
-
-        // Дополнительные характеристики
         this.additionalFields.render(contentEl);
-
-        // Иммунитеты и сопротивления
         this.immunities.render(contentEl);
-
-        // Черты
         this.traits.render(contentEl);
-
-        // Действия
         this.actions.render(contentEl);
-
-        // Бонусные действия
         this.bonusActions.render(contentEl);
-
-        // Реакции
         this.reactions.render(contentEl);
-
-        // Легендарные действия
         this.legendaryActions.render(contentEl);
     }
 
     private renderSaveButtons(contentEl: HTMLElement) {
         new Setting(contentEl)
             .addButton(btn => btn
-                .setButtonText('Сохранить')
+                .setButtonText(i18n.t('CREATURE_MODAL.SAVE_BUTTON'))
                 .setCta()
                 .onClick(() => this.saveCreature()))
             .addButton(btn => btn
-                .setButtonText('Отмена')
+                .setButtonText(i18n.t('CREATURE_MODAL.CANCEL_BUTTON'))
                 .onClick(() => this.close()));
     }
 
     private async saveCreature() {
         if (!this.basicFields.getName().trim()) {
-            new Notice('Пожалуйста, введите имя существа');
+            new Notice(i18n.t('CREATURE_MODAL.VALIDATION_NAME'));
             return;
         }
 
@@ -153,10 +132,10 @@ export class CreatureCreationModal extends Modal {
             const creature = await this.bestiaryService.createCreature(creatureData);
             this.onSave(creature);
             this.close();
-            new Notice(`Существо "${creature.name}" добавлено в бестиарий!`);
+            new Notice(i18n.t('CREATURE_MODAL.SUCCESS', { name: creature.name }));
         } catch (error) {
             console.error('Error creating creature:', error);
-            new Notice('Ошибка при сохранении существа: ' + error.message);
+            new Notice(i18n.t('CREATURE_MODAL.ERROR', { message: error.message }));
         }
     }
 }
