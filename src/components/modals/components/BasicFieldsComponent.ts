@@ -1,10 +1,10 @@
 import { Setting } from 'obsidian';
-import { CREATURE_SIZES, ALIGNMENTS, SizeKey, AlignmentKey } from 'src/constants/Constants';
+import { CREATURE_TYPES, CREATURE_SIZES, ALIGNMENTS, CreatureTypeKey, SizeKey, AlignmentKey } from 'src/constants/Constants';
 import { i18n } from 'src/services/LocalizationService';
 
 export class BasicFieldsComponent {
     private name: string = '';
-    private type: string = '';
+    private type: CreatureTypeKey = 'HUMANOID';
     private size: SizeKey = 'MEDIUM';
     private alignment: AlignmentKey = 'NO_ALIGNMENT';
     private habitat: string = '';
@@ -27,9 +27,14 @@ export class BasicFieldsComponent {
         new Setting(section)
             .setName(i18n.t('BASIC_FIELDS.TYPE'))
             .setDesc(i18n.t('BASIC_FIELDS.TYPE_DESC'))
-            .addText(text => text
-                .setPlaceholder(i18n.t('BASIC_FIELDS.TYPE_PLACEHOLDER'))
-                .onChange(value => this.type = value));
+            .addDropdown(dropdown => {
+                const creatureTypes = i18n.getGameDataCategory('CREATURE_TYPES');
+                CREATURE_TYPES.forEach(typeKey => {
+                    dropdown.addOption(typeKey, creatureTypes[typeKey] || typeKey);
+                });
+                dropdown.setValue(this.type)
+                    .onChange(value => this.type = value as CreatureTypeKey);
+            });
 
         new Setting(section)
             .setName(i18n.t('BASIC_FIELDS.SIZE'))

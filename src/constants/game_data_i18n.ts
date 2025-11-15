@@ -1,5 +1,21 @@
 // English game data
 export const GAME_DATA_EN = {
+    CREATURE_TYPES: {
+        ABERRATION: 'Aberration',
+        BEAST: 'Beast',
+        CELESTIAL: 'Celestial',
+        CONSTRUCT: 'Construct',
+        DRAGON: 'Dragon',
+        ELEMENTAL: 'Elemental',
+        FEY: 'Fey',
+        FIEND: 'Fiend',
+        GIANT: 'Giant',
+        HUMANOID: 'Humanoid',
+        MONSTROSITY: 'Monstrosity',
+        OOZE: 'Ooze',
+        PLANT: 'Plant',
+        UNDEAD: 'Undead'
+    },
     SIZES: {
         TINY: 'Tiny',
         SMALL: 'Small',
@@ -78,6 +94,22 @@ export const GAME_DATA_EN = {
 
 // Russian game data
 export const GAME_DATA_RU = {
+    CREATURE_TYPES: {
+        ABERRATION: 'Аберрация',
+        BEAST: 'Зверь',
+        CELESTIAL: 'Небожитель',
+        CONSTRUCT: 'Конструкт',
+        DRAGON: 'Дракон',
+        ELEMENTAL: 'Элементаль',
+        FEY: 'Фея',
+        FIEND: 'Исчадие',
+        GIANT: 'Великан',
+        HUMANOID: 'Гуманоид',
+        MONSTROSITY: 'Монстр',
+        OOZE: 'Слизь',
+        PLANT: 'Растение',
+        UNDEAD: 'Нежить'
+    },
     SIZES: {
         TINY: 'Крошечный',
         SMALL: 'Малый',
@@ -155,6 +187,7 @@ export const GAME_DATA_RU = {
 } as const;
 
 export type GameDataKey = keyof typeof GAME_DATA_EN;
+export type CreatureTypeKey = keyof typeof GAME_DATA_EN.CREATURE_TYPES;
 export type SizeKey = keyof typeof GAME_DATA_EN.SIZES;
 export type AlignmentKey = keyof typeof GAME_DATA_EN.ALIGNMENTS;
 export type DamageTypeKey = keyof typeof GAME_DATA_EN.DAMAGE_TYPES;

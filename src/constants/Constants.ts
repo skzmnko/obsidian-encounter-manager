@@ -1,11 +1,29 @@
 import { 
-    GAME_DATA_EN, 
+    GAME_DATA_EN,
+    CreatureTypeKey,
     SizeKey, 
     AlignmentKey, 
     DamageTypeKey, 
     ConditionKey,
     ConditionDescriptionKey
 } from './game_data_i18n';
+
+export const CREATURE_TYPES: readonly CreatureTypeKey[] = [
+    'ABERRATION',
+    'BEAST',
+    'CELESTIAL',
+    'CONSTRUCT',
+    'DRAGON',
+    'ELEMENTAL',
+    'FEY',
+    'FIEND',
+    'GIANT',
+    'HUMANOID',
+    'MONSTROSITY',
+    'OOZE',
+    'PLANT',
+    'UNDEAD'
+] as const;
 
 export const CREATURE_SIZES: readonly SizeKey[] = [
     'TINY', 'SMALL', 'MEDIUM', 'LARGE', 'HUGE', 'GARGANTUAN'
@@ -81,10 +99,11 @@ export const CONDITION_DESCRIPTIONS: readonly ConditionDescriptionKey[] = [
     'UNCONSCIOUS'
 ] as const;
 
+export type CreatureType = CreatureTypeKey;
 export type CreatureSize = SizeKey;
 export type Alignment = AlignmentKey;
 export type DamageType = DamageTypeKey;
 export type Condition = ConditionKey;
 export type ConditionDescription = ConditionDescriptionKey;
 
-export type { SizeKey, AlignmentKey, DamageTypeKey, ConditionKey };
+export type { CreatureTypeKey, SizeKey, AlignmentKey, DamageTypeKey, ConditionKey };

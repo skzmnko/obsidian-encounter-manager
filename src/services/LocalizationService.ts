@@ -1,8 +1,9 @@
 import { LOCALE_EN, LOCALE_RU } from 'src/constants/bestiary_i18n';
 import { 
     GAME_DATA_EN, 
-    GAME_DATA_RU, 
+    GAME_DATA_RU,
     GameDataKey, 
+    CreatureTypeKey,
     SizeKey, 
     AlignmentKey, 
     DamageTypeKey, 
@@ -11,6 +12,7 @@ import {
 } from 'src/constants/game_data_i18n';
 
 type GameDataCategory = 
+    | { [key in CreatureTypeKey]: string }
     | { [key in SizeKey]: string }
     | { [key in AlignmentKey]: string }
     | { [key in DamageTypeKey]: string }
@@ -75,6 +77,10 @@ export class LocalizationService {
         });
         
         return result;
+    }
+
+    getCreatureType(key: CreatureTypeKey): string {
+        return this.getGameData('CREATURE_TYPES', key);
     }
 
     getSize(key: SizeKey): string {
