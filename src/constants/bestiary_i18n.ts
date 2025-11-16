@@ -61,7 +61,7 @@ export const LOCALE_EN = {
         GENDER_PLACEHOLDER: 'Male or Female',
         NOTABLE_ITEMS: 'Notable Items',
         NOTABLE_ITEMS_DESC: 'Notable items, equipment or possessions',
-        NOTABLE_ITEMS_PLACEHOLDER: 'Magic sword, family heirloom, secret documents...'
+        NOTABLE_ITEMS_PLACEHOLDER: 'Magic sword, secret documents...'
     },
     CORE_PARAMETERS: {
         TITLE: 'Core Parameters',
@@ -74,7 +74,7 @@ export const LOCALE_EN = {
         SPEED_DESC: 'Movement speed',
         SPEED_PLACEHOLDER: '30 ft., fly 60 ft.',
         INITIATIVE: 'Initiative',
-        INITIATIVE_DESC: 'Initiative bonus (automatically calculated as dexterity modifier)',
+        INITIATIVE_DESC: 'Initiative bonus (dexterity modifier)',
         PROFICIENCY_BONUS: 'Proficiency Bonus',
         PROFICIENCY_BONUS_DESC: 'Creature proficiency bonus',
         PROFICIENCY_BONUS_PLACEHOLDER: '2'
@@ -93,12 +93,12 @@ export const LOCALE_EN = {
         CRAFT_INGREDIENTS: 'Craft Ingredients',
         CRAFT_INGREDIENTS_DESC: 'Ingredients for crafting',
         CRAFT_INGREDIENTS_PLACEHOLDER: 'Bones, claws, teeth...',
-        NOTES: 'Notes',
-        NOTES_DESC: 'Additional notes',
-        NOTES_PLACEHOLDER: 'Special behavior, combat tactics, etc.',
-        COMMENTS: 'Comments',
-        COMMENTS_DESC: 'Additional comments or observations',
-        COMMENTS_PLACEHOLDER: 'Personality traits, background story, relationships...'
+        STATEMENTS: 'Statements',
+        STATEMENTS_DESC: 'Character statements, personality traits',
+        STATEMENTS_PLACEHOLDER: 'Character statements, personality traits...',
+        TACTICS: 'Tactics',
+        TACTICS_DESC: 'Combat tactics and special behavior',
+        TACTICS_PLACEHOLDER: 'Special behavior, combat tactics, etc.',
     },
     IMMUNITIES: {
         TITLE: 'Immunities and Resistances',
@@ -292,7 +292,7 @@ export const LOCALE_RU = {
         SPEED_DESC: 'Скорость перемещения',
         SPEED_PLACEHOLDER: '30 футов, полет 60 футов',
         INITIATIVE: 'Инициатива',
-        INITIATIVE_DESC: 'Бонус инициативы (рассчитывается автоматически как модификатор ловкости)',
+        INITIATIVE_DESC: 'Бонус инициативы (модификатор ловкости)',
         PROFICIENCY_BONUS: 'Бонус мастерства',
         PROFICIENCY_BONUS_DESC: 'Бонус мастерства существа',
         PROFICIENCY_BONUS_PLACEHOLDER: '2'
@@ -311,12 +311,12 @@ export const LOCALE_RU = {
         CRAFT_INGREDIENTS: 'Ингредиенты для крафта',
         CRAFT_INGREDIENTS_DESC: 'Ингредиенты для ремесла',
         CRAFT_INGREDIENTS_PLACEHOLDER: 'Кости, когти, зубы...',
-        NOTES: 'Заметки',
-        NOTES_DESC: 'Дополнительные заметки',
-        NOTES_PLACEHOLDER: 'Особое поведение, тактика боя и т.д.',
-        COMMENTS: 'Комментарии',
-        COMMENTS_DESC: 'Комментарии по реакциям персонажа',
-        COMMENTS_PLACEHOLDER: 'Комментарии по реакциям персонажа...'
+        STATEMENTS: 'Высказывания',
+        STATEMENTS_DESC: 'Высказывания персонажа, черты личности, предыстория',
+        STATEMENTS_PLACEHOLDER: 'Черты личности, предыстория, отношения...',
+        TACTICS: 'Тактика',
+        TACTICS_DESC: 'Боевая тактика и особое поведение',
+        TACTICS_PLACEHOLDER: 'Особое поведение, тактика боя и т.д.'
     },
     IMMUNITIES: {
         TITLE: 'Иммунитеты и сопротивления',

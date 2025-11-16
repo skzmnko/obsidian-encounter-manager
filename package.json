@@ -1,6 +1,6 @@
 {
   "name": "dnd-tools",
-  "version": "0.39.0",
+  "version": "0.46.0",
   "description": "Comprehensive D&D toolkit for Obsidian - bestiary, encounters, spells managemen",
   "main": "main.js",
   "scripts": {

@@ -1,4 +1,3 @@
-// AdditionalFieldsComponent.ts
 import { Setting } from 'obsidian';
 import { i18n } from 'src/services/LocalizationService';
 
@@ -7,11 +6,11 @@ export class AdditionalFieldsComponent {
     private senses: string = '';
     private alchemy_ingredients: string = '';
     private craft_ingredients: string = '';
-    private comments: string = '';
-    private notes: string = '';
+    private statements: string = '';
+    private tactics: string = '';
     private alchemySetting: Setting | null = null;
     private craftSetting: Setting | null = null;
-    private commentsSetting: Setting | null = null;
+    private statementsSetting: Setting | null = null;
 
     render(container: HTMLElement) {
         const section = container.createDiv({ cls: 'creature-section' });
@@ -64,25 +63,25 @@ export class AdditionalFieldsComponent {
                 text.inputEl.addClass('fixed-textarea');
             });
 
-        this.commentsSetting = new Setting(section)
-            .setName(i18n.t('ADDITIONAL_FIELDS.COMMENTS'))
-            .setDesc(i18n.t('ADDITIONAL_FIELDS.COMMENTS_DESC'))
+        this.statementsSetting = new Setting(section)
+            .setName(i18n.t('ADDITIONAL_FIELDS.STATEMENTS'))
+            .setDesc(i18n.t('ADDITIONAL_FIELDS.STATEMENTS_DESC'))
             .addTextArea(text => {
-                text.setPlaceholder(i18n.t('ADDITIONAL_FIELDS.COMMENTS_PLACEHOLDER'))
-                .setValue(this.comments)
-                .onChange(value => this.comments = value);
-                text.inputEl.addClass('comments-textarea');
+                text.setPlaceholder(i18n.t('ADDITIONAL_FIELDS.STATEMENTS_PLACEHOLDER'))
+                .setValue(this.statements)
+                .onChange(value => this.statements = value);
+                text.inputEl.addClass('statements-textarea');
                 text.inputEl.addClass('fixed-textarea');
             });
 
         new Setting(section)
-            .setName(i18n.t('ADDITIONAL_FIELDS.NOTES'))
-            .setDesc(i18n.t('ADDITIONAL_FIELDS.NOTES_DESC'))
+            .setName(i18n.t('ADDITIONAL_FIELDS.TACTICS'))
+            .setDesc(i18n.t('ADDITIONAL_FIELDS.TACTICS_DESC'))
             .addTextArea(text => {
-                text.setPlaceholder(i18n.t('ADDITIONAL_FIELDS.NOTES_PLACEHOLDER'))
-                .setValue(this.notes)
-                .onChange(value => this.notes = value);
-                text.inputEl.addClass('notes-textarea');
+                text.setPlaceholder(i18n.t('ADDITIONAL_FIELDS.TACTICS_PLACEHOLDER'))
+                .setValue(this.tactics)
+                .onChange(value => this.tactics = value);
+                text.inputEl.addClass('tactics-textarea');
                 text.inputEl.addClass('fixed-textarea');
             });
 
@@ -90,16 +89,16 @@ export class AdditionalFieldsComponent {
     }
 
     toggleIngredientsVisibility(isHumanoid: boolean): void {
-        if (!this.alchemySetting || !this.craftSetting || !this.commentsSetting) return;
+        if (!this.alchemySetting || !this.craftSetting || !this.statementsSetting) return;
         
         if (isHumanoid) {
             this.alchemySetting.settingEl.hide();
             this.craftSetting.settingEl.hide();
-            this.commentsSetting.settingEl.show();
+            this.statementsSetting.settingEl.show();
         } else {
             this.alchemySetting.settingEl.show();
             this.craftSetting.settingEl.show();
-            this.commentsSetting.settingEl.hide();
+            this.statementsSetting.settingEl.hide();
         }
     }
 
@@ -107,6 +106,6 @@ export class AdditionalFieldsComponent {
     getSenses(): string { return this.senses; }
     getAlchemyIngredients(): string { return this.alchemy_ingredients; }
     getCraftIngredients(): string { return this.craft_ingredients; }
-    getComments(): string { return this.comments; }
-    getNotes(): string { return this.notes; }
+    getStatements(): string { return this.statements; }
+    getTactics(): string { return this.tactics; }
 }

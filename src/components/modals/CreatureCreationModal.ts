@@ -127,6 +127,7 @@ export class CreatureCreationModal extends Modal {
             senses: this.additionalFields.getSenses(),
             alchemy_ingredients: this.additionalFields.getAlchemyIngredients(),
             craft_ingredients: this.additionalFields.getCraftIngredients(),
+            statements: this.additionalFields.getStatements(),
             damage_resistances: this.immunities.getDamageResistances().map(res => i18n.getDamageType(res as any)),
             damage_vulnerabilities: this.immunities.getDamageVulnerabilities().map(vul => i18n.getDamageType(vul as any)),
             damage_immunities: this.immunities.getDamageImmunities().map(imm => i18n.getDamageType(imm as any)),
@@ -136,7 +137,7 @@ export class CreatureCreationModal extends Modal {
             bonus_actions: this.bonusActions.getBonusActions(),
             reactions: this.reactions.getReactions(),
             legendary_actions: this.legendaryActions.getLegendaryActions(),
-            notes: this.additionalFields.getNotes()
+            tactics: this.additionalFields.getTactics()
         };
 
         try {

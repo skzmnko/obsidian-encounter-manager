@@ -27,7 +27,7 @@ export interface Creature {
     senses: string;
     alchemy_ingredients: string;
     craft_ingredients: string;
-    comments: string;
+    staements: string;
     damage_resistances: string[];
     damage_vulnerabilities: string[];
     damage_immunities: string[];
@@ -42,7 +42,7 @@ export interface Creature {
     bonus_actions: CreatureAction[];
     reactions: CreatureAction[];
     legendary_actions: CreatureAction[];
-    notes: string;
+    tactics: string;
     created: number;
     updated: number;
 }
