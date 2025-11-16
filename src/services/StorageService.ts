@@ -61,7 +61,6 @@ export class StorageService {
         return normalizePath(`${this.getEncountersFolderPath()}/${fileName}`);
     }
 
-    // МЕТОДЫ ДЛЯ BESTIARY - ИСПРАВЛЕННЫЕ
     async loadBestiaryData(): Promise<BestiaryData> {
         try {
             const filePath = this.getBestiaryFilePath();
@@ -89,7 +88,6 @@ export class StorageService {
             const filePath = this.getBestiaryFilePath();
             console.log('Saving bestiary to:', filePath, 'creatures:', data.creatures.length);
             
-            // Убедимся, что папка существует
             await this.ensureStorageFolder();
             
             let file = this.plugin.app.vault.getAbstractFileByPath(filePath);
@@ -110,7 +108,6 @@ export class StorageService {
         }
     }
 
-    // ИСПРАВЛЕННЫЙ ПУТЬ - используем корень vault
     private getBestiaryFilePath(): string {
         return normalizePath('storage/bestiary.json');
     }
@@ -126,7 +123,6 @@ export class StorageService {
                 console.log('Storage folder created successfully');
             }
         } catch (error) {
-            // Игнорируем ошибку "папка уже существует"
             if (error.message?.includes('already exists')) {
                 console.log('Storage folder already exists');
             } else {
@@ -136,7 +132,6 @@ export class StorageService {
         }
     }
 
-    // Старые методы для обратной совместимости
     async loadData(): Promise<any> {
         return await this.loadEncountersByDate(new Date());
     }

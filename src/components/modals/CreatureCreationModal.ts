@@ -12,6 +12,7 @@ import { BonusActionsComponent } from './components/BonusActionsComponent';
 import { ReactionsComponent } from './components/ReactionsComponent';
 import { LegendaryActionsComponent } from './components/LegendaryActionsComponent';
 import { i18n } from 'src/services/LocalizationService';
+import { CreatureTypeKey, SizeKey, AlignmentKey, DamageTypeKey, ConditionKey } from 'src/constants/game_data_i18n';
 
 export class CreatureCreationModal extends Modal {
     private basicFields: BasicFieldsComponent;
@@ -102,9 +103,9 @@ export class CreatureCreationModal extends Modal {
 
         const creatureData = {
             name: this.basicFields.getName(),
-            type: this.basicFields.getType(),
-            size: this.basicFields.getSize(),
-            alignment: this.basicFields.getAlignment(),
+            type: i18n.getCreatureType(this.basicFields.getType() as CreatureTypeKey),
+            size: i18n.getSize(this.basicFields.getSize() as SizeKey),
+            alignment: i18n.getAlignment(this.basicFields.getAlignment() as AlignmentKey),
             habitat: this.basicFields.getHabitat(),
             languages: this.basicFields.getLanguages(),
             ac: this.coreParameters.getAC(),
@@ -116,10 +117,10 @@ export class CreatureCreationModal extends Modal {
             saving_throws: this.abilityScores.calculateSavingThrows(),
             skills: this.additionalFields.getSkills(),
             senses: this.additionalFields.getSenses(),
-            damage_resistances: this.immunities.getDamageResistances(),
-            damage_vulnerabilities: this.immunities.getDamageVulnerabilities(),
-            damage_immunities: this.immunities.getDamageImmunities(),
-            condition_immunities: this.immunities.getConditionImmunities(),
+            damage_resistances: this.immunities.getDamageResistances().map(res => i18n.getDamageType(res as any)),
+            damage_vulnerabilities: this.immunities.getDamageVulnerabilities().map(vul => i18n.getDamageType(vul as any)),
+            damage_immunities: this.immunities.getDamageImmunities().map(imm => i18n.getDamageType(imm as any)),
+            condition_immunities: this.immunities.getConditionImmunities().map(cond => i18n.getCondition(cond as any)),
             traits: this.traits.getTraits(),
             actions: this.actions.getActions(),
             bonus_actions: this.bonusActions.getBonusActions(),
