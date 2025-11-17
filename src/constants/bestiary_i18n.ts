@@ -18,6 +18,8 @@ export const LOCALE_EN = {
         EDIT_IN_PROGRESS: 'Editing in development',
         VIEW_IN_PROGRESS: 'Viewing in development',
         SEARCH_PLACEHOLDER: 'Search by name...',
+        SEARCH_NO_RESULTS: 'No creatures found for: "{query}"',
+        SEARCH_RESULTS_COUNT: '{count} creatures found',
         CREATURE_DETAILS: '{type}, {size}, Proficiency Bonus: +{bonus}',
         ALPHABETICAL_SECTIONS: 'Alphabetical Sections'
     },
@@ -240,6 +242,8 @@ export const LOCALE_RU = {
         EDIT_IN_PROGRESS: 'Редактирование в разработке',
         VIEW_IN_PROGRESS: 'Просмотр в разработке',
         SEARCH_PLACEHOLDER: 'Поиск по имени...',
+        SEARCH_NO_RESULTS: 'Ничего не найдено по запросу: "{query}"',
+        SEARCH_RESULTS_COUNT: 'Найдено существ: {count}',
         CREATURE_DETAILS: '{type}, {size}, Бонус мастерства: +{bonus}',
         ALPHABETICAL_SECTIONS: 'Алфавитные разделы'
     },

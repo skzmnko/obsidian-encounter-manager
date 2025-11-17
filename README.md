@@ -4,11 +4,11 @@ A comprehensive plugin for managing D&D campaigns in Obsidian - bestiary, encoun
 
 ## Features
 
-- 📖 **Custom Bestiary** - Create and manage custom creatures
-- ⚔️ **Encounter Manager** - Track combat and manage encounters  
-- 🔮 **Spells Database** - Custom spells management (coming soon)
-- 🎯 **Combat Tracking** - Monitor HP, status effects, and initiative
-- 📝 **Embed in Notes** - Use code blocks to embed encounters in your notes
+- 📖 **Custom Bestiary** - Create and manage custom creatures (in progress)
+- ⚔️ **Encounter Manager** - Track combat and manage encounters  (to do)
+- 🔮 **Spells Database** - Custom spells management (to do)
+- 🎯 **Combat Tracking** - Monitor HP, status effects, and initiative (to do)
+- 📝 **Embed in Notes** - Use code blocks to embed encounters in your notes (to do)
 
 ## Development
 

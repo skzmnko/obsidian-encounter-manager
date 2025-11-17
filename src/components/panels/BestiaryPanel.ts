@@ -4,10 +4,11 @@ import { CreatureCreationModal } from 'src/components/modals/CreatureCreationMod
 import { i18n } from 'src/services/LocalizationService';
 
 export const BESTIARY_VIEW_TYPE = 'bestiary-view';
-
 export class BestiaryPanel extends ItemView {
     bestiaryService: any;
     creatures: Creature[] = [];
+    private searchQuery: string = '';
+    private searchInput: HTMLInputElement | null = null;
 
     constructor(leaf: WorkspaceLeaf, bestiaryService: any) {
         super(leaf);
@@ -39,7 +40,7 @@ export class BestiaryPanel extends ItemView {
     }
 
     render() {
-        const container = this.containerEl.children[1];
+        const container = this.containerEl.children[1] as HTMLElement;
         container.empty();
         const header = container.createDiv({ cls: 'bestiary-header' });
         header.createEl('h2', { text: i18n.t('BESTIARY.TITLE') });
@@ -52,23 +53,96 @@ export class BestiaryPanel extends ItemView {
             this.openCreatureCreationModal();
         });
 
-        const creaturesList = container.createDiv({ cls: 'bestiary-list' });
+        const currentSearchValue = this.searchInput?.value || '';
+        const selectionStart = this.searchInput?.selectionStart || 0;
+        const selectionEnd = this.searchInput?.selectionEnd || 0;
 
-        if (this.creatures.length === 0) {
-            creaturesList.createEl('p', { 
-                text: i18n.t('BESTIARY.NO_CREATURES'),
-                cls: 'bestiary-empty'
-            });
+        this.renderSearchBox(container);
+
+        if (this.searchInput) {
+            this.searchInput.value = currentSearchValue;
+            this.searchInput.setSelectionRange(selectionStart, selectionEnd);
+            
+            setTimeout(() => {
+                this.searchInput?.focus();
+            }, 0);
+        }
+
+        const creaturesList = container.createDiv({ cls: 'bestiary-list' });
+        const filteredCreatures = this.filterCreaturesByName(this.creatures, this.searchQuery);
+
+        if (filteredCreatures.length === 0) {
+            if (this.searchQuery) {
+                creaturesList.createEl('p', { 
+                    text: i18n.t('BESTIARY.SEARCH_NO_RESULTS', { query: this.searchQuery }),
+                    cls: 'bestiary-empty'
+                });
+            } else {
+                creaturesList.createEl('p', { 
+                    text: i18n.t('BESTIARY.NO_CREATURES'),
+                    cls: 'bestiary-empty'
+                });
+            }
             return;
         }
 
-        const sortedCreatures = [...this.creatures].sort((a, b) => 
+        const sortedCreatures = [...filteredCreatures].sort((a, b) => 
             a.name.localeCompare(b.name)
         );
 
         const groupedCreatures = this.groupCreaturesByFirstLetter(sortedCreatures);
         
         this.renderGroupedCreaturesList(creaturesList, groupedCreatures);
+    }
+
+    private renderSearchBox(container: HTMLElement) {
+        const searchContainer = container.createDiv({ cls: 'bestiary-search-container' });
+        
+        this.searchInput = searchContainer.createEl('input', {
+            type: 'text',
+            placeholder: i18n.t('BESTIARY.SEARCH_PLACEHOLDER'),
+            cls: 'bestiary-search-input'
+        });
+
+        this.searchInput.value = this.searchQuery;
+
+        let searchTimeout: NodeJS.Timeout;
+        this.searchInput.addEventListener('input', (e) => {
+            const value = (e.target as HTMLInputElement).value.toLowerCase().trim();
+            
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.searchQuery = value;
+                this.render();
+            }, 300);
+        });
+
+        this.searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.searchQuery = '';
+                if (this.searchInput) {
+                    this.searchInput.value = '';
+                }
+                this.render();
+                e.preventDefault();
+            }
+        });
+
+        this.searchInput.addEventListener('blur', () => {
+            if (this.searchInput) {
+                this.searchQuery = this.searchInput.value.toLowerCase().trim();
+            }
+        });
+    }
+
+    private filterCreaturesByName(creatures: Creature[], searchQuery: string): Creature[] {
+        if (!searchQuery) {
+            return creatures;
+        }
+
+        return creatures.filter(creature => 
+            creature.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
     }
 
     private groupCreaturesByFirstLetter(creatures: Creature[]): Map<string, Creature[]> {
@@ -104,7 +178,7 @@ export class BestiaryPanel extends ItemView {
         });
     }
 
-    renderCreatureListItem(container: HTMLElement, creature: Creature) {
+    private renderCreatureListItem(container: HTMLElement, creature: Creature) {
         const creatureEl = container.createDiv({ cls: 'creature-list-item' });
         
         const nameRow = creatureEl.createDiv({ cls: 'creature-name-row' });
