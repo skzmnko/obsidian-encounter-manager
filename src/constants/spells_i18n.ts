@@ -27,7 +27,9 @@ export const SPELLS_LOCALE_EN = {
         SPELL_DETAILS: 'Level {level} {school}',
         ALPHABETICAL_SECTIONS: 'Alphabetical Sections',
         DELETE_CONFIRM_SINGLE: 'Are you sure you want to delete "{name}"? This action cannot be undone.',
-        DELETE_CONFIRM_MULTIPLE: 'Are you sure you want to delete {count} spells? This action cannot be undone.'
+        DELETE_CONFIRM_MULTIPLE: 'Are you sure you want to delete {count} spells? This action cannot be undone.',
+        EDIT_MULTIPLE_IN_PROGRESS: 'Editing {count} spells...',
+        DELETE_MULTIPLE_SUCCESS: 'Successfully deleted {count} spells'
     },
     SPELL_FIELDS: {
         TITLE: 'Spell Information',
@@ -106,7 +108,9 @@ export const SPELLS_LOCALE_RU = {
         SPELL_DETAILS: '{level} круг, {school}',
         ALPHABETICAL_SECTIONS: 'Алфавитные разделы',
         DELETE_CONFIRM_SINGLE: 'Вы уверены, что хотите удалить "{name}"? Это действие нельзя отменить.',
-        DELETE_CONFIRM_MULTIPLE: 'Вы уверены, что хотите удалить {count} заклинаний? Это действие нельзя отменить.'
+        DELETE_CONFIRM_MULTIPLE: 'Вы уверены, что хотите удалить {count} заклинаний? Это действие нельзя отменить.',
+        EDIT_MULTIPLE_IN_PROGRESS: 'Редактирование {count} заклинаний...',
+        DELETE_MULTIPLE_SUCCESS: 'Успешно удалено {count} заклинаний'
     },
     SPELL_FIELDS: {
         TITLE: 'Информация о заклинании',

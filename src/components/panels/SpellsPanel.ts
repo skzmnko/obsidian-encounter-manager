@@ -11,7 +11,10 @@ export class SpellsPanel extends ItemView {
     private searchQuery: string = '';
     private searchInput: HTMLInputElement | null = null;
     private addButton: HTMLButtonElement | null = null;
+    private editButton: HTMLButtonElement | null = null;
+    private deleteButton: HTMLButtonElement | null = null;
     private titleElement: HTMLElement | null = null;
+    private selectedSpellIds: Set<string> = new Set();
 
     constructor(leaf: WorkspaceLeaf, spellService: any) {
         super(leaf);
@@ -88,6 +91,23 @@ export class SpellsPanel extends ItemView {
         this.addButton.addEventListener('click', () => {
             this.openSpellCreationModal();
         });
+
+        this.editButton = buttonsContainer.createEl('button', { 
+            text: i18n.t('SPELLS.EDIT'),
+            cls: 'mod-secondary'
+        });
+        this.editButton.addEventListener('click', () => {
+            this.editSelectedSpells();
+        });
+        this.editButton.disabled = true;
+        this.deleteButton = buttonsContainer.createEl('button', { 
+            text: i18n.t('SPELLS.DELETE'),
+            cls: 'mod-warning'
+        });
+        this.deleteButton.addEventListener('click', () => {
+            this.deleteSelectedSpells();
+        });
+        this.deleteButton.disabled = true;
     }
 
     private renderSpellsList(container: HTMLElement) {
@@ -130,6 +150,14 @@ export class SpellsPanel extends ItemView {
 
         if (this.addButton) {
             this.addButton.setText(i18n.t('SPELLS.ADD_SPELL'));
+        }
+
+        if (this.editButton) {
+            this.editButton.setText(i18n.t('SPELLS.EDIT'));
+        }
+
+        if (this.deleteButton) {
+            this.deleteButton.setText(i18n.t('SPELLS.DELETE'));
         }
 
         const spellsList = this.containerEl.querySelector('.spells-list');
@@ -202,7 +230,16 @@ export class SpellsPanel extends ItemView {
 
     private renderSpellListItem(container: HTMLElement, spell: Spell) {
         const spellEl = container.createDiv({ cls: 'spell-list-item' });
-        
+        const checkboxContainer = spellEl.createDiv({ cls: 'spell-checkbox-container' });
+        const checkbox = checkboxContainer.createEl('input', {
+            type: 'checkbox',
+            cls: 'spell-checkbox'
+        });
+        checkbox.checked = this.selectedSpellIds.has(spell.id);
+        checkbox.addEventListener('change', () => {
+            this.toggleSpellSelection(spell.id, checkbox.checked);
+        });
+
         const spellContent = spellEl.createDiv({ cls: 'spell-content' });
         
         const nameRow = spellContent.createDiv({ cls: 'spell-name-row' });
@@ -216,21 +253,17 @@ export class SpellsPanel extends ItemView {
         });
 
         const detailsRow = spellContent.createDiv({ cls: 'spell-details-row' });
-        
-        // Level and school
         const levelText = spell.level === 0 ? 'Cantrip' : `Level ${spell.level}`;
         const basicInfo = detailsRow.createEl('span', { 
             text: `${levelText} ${spell.school}`,
             cls: 'spell-basic-info'
         });
 
-        // Casting time and range
         const castingInfo = detailsRow.createEl('span', { 
             text: ` • ${spell.castingTime} • ${spell.range}`,
             cls: 'spell-casting-info'
         });
 
-        // Components
         const components = [];
         if (spell.components.verbal) components.push('V');
         if (spell.components.somatic) components.push('S');
@@ -243,7 +276,6 @@ export class SpellsPanel extends ItemView {
             });
         }
 
-        // Special flags
         const flags = [];
         if (spell.concentration) flags.push(i18n.t('SPELL_FIELDS.CONCENTRATION'));
         if (spell.ritual) flags.push(i18n.t('SPELL_FIELDS.RITUAL'));
@@ -254,45 +286,81 @@ export class SpellsPanel extends ItemView {
                 cls: 'spell-flags-info'
             });
         }
-
-        // Actions container
-        const actions = spellEl.createDiv({ cls: 'spell-actions' });
-        
-        const editBtn = actions.createEl('button', { 
-            text: i18n.t('SPELLS.EDIT'),
-            cls: 'mod-secondary'
-        });
-        
-        editBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            new Notice(i18n.t('SPELLS.EDIT_IN_PROGRESS', { name: spell.name }));
-        });
-
-        const deleteBtn = actions.createEl('button', { 
-            text: i18n.t('SPELLS.DELETE'),
-            cls: 'mod-warning'
-        });
-        
-        deleteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.deleteSpell(spell);
-        });
     }
 
-    private async deleteSpell(spell: Spell) {
-        const confirmed = confirm(
-            i18n.t('SPELLS.DELETE_CONFIRM_SINGLE', { name: spell.name })
-        );
+    private toggleSpellSelection(spellId: string, selected: boolean) {
+        if (selected) {
+            this.selectedSpellIds.add(spellId);
+        } else {
+            this.selectedSpellIds.delete(spellId);
+        }
+        this.updateActionButtonsState();
+    }
+
+    private updateActionButtonsState() {
+        const hasSelection = this.selectedSpellIds.size > 0;
+        
+        if (this.editButton) {
+            this.editButton.disabled = !hasSelection;
+        }
+        
+        if (this.deleteButton) {
+            this.deleteButton.disabled = !hasSelection;
+        }
+    }
+
+    private editSelectedSpells() {
+        const selectedCount = this.selectedSpellIds.size;
+        if (selectedCount === 0) return;
+
+        if (selectedCount === 1) {
+            const spellId = Array.from(this.selectedSpellIds)[0];
+            const spell = this.spells.find(s => s.id === spellId);
+            if (spell) {
+                new Notice(i18n.t('SPELLS.EDIT_IN_PROGRESS', { name: spell.name }));
+                // TODO: Implement single spell editing
+            }
+        } else {
+            new Notice(i18n.t('SPELLS.EDIT_MULTIPLE_IN_PROGRESS', { count: selectedCount.toString() }));
+            // TODO: Implement multiple spell editing
+        }
+    }
+
+    private async deleteSelectedSpells() {
+        const selectedCount = this.selectedSpellIds.size;
+        if (selectedCount === 0) return;
+
+        let confirmMessage: string;
+        if (selectedCount === 1) {
+            const spellId = Array.from(this.selectedSpellIds)[0];
+            const spell = this.spells.find(s => s.id === spellId);
+            confirmMessage = i18n.t('SPELLS.DELETE_CONFIRM_SINGLE', { name: spell?.name || '' });
+        } else {
+            confirmMessage = i18n.t('SPELLS.DELETE_CONFIRM_MULTIPLE', { count: selectedCount.toString() });
+        }
+
+        const confirmed = confirm(confirmMessage);
 
         if (confirmed) {
             try {
-                await this.spellService.deleteSpell(spell.id);
+                for (const spellId of this.selectedSpellIds) {
+                    await this.spellService.deleteSpell(spellId);
+                }
+                
+                this.selectedSpellIds.clear();
                 await this.loadSpells();
                 this.render();
-                new Notice(i18n.t('SPELLS.DELETE_SUCCESS', { name: spell.name }));
+                
+                if (selectedCount === 1) {
+                    const spellId = Array.from(this.selectedSpellIds)[0];
+                    const spell = this.spells.find(s => s.id === spellId);
+                    new Notice(i18n.t('SPELLS.DELETE_SUCCESS', { name: spell?.name || '' }));
+                } else {
+                    new Notice(i18n.t('SPELLS.DELETE_MULTIPLE_SUCCESS', { count: selectedCount.toString() }));
+                }
             } catch (error: any) {
-                console.error('Error deleting spell:', error);
-                new Notice(`Error deleting spell: ${error.message}`);
+                console.error('Error deleting spells:', error);
+                new Notice(`Error deleting spells: ${error.message}`);
             }
         }
     }
