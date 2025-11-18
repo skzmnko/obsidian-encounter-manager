@@ -3,6 +3,13 @@
     margin-bottom: 20px;
 }
 
+.bestiary-title {
+    color: var(--text-normal);
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
 .bestiary-controls {
     display: flex;
     justify-content: space-between;

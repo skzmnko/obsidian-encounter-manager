@@ -74,35 +74,6 @@ export const SPELLS_LOCALE_EN = {
         CANTRIP_UPGRADE_PLACEHOLDER: 'The damage increases by 1d6 when you reach levels 5, 11, and 17.',
         MANA_COST: 'Mana Cost',
         MANA_COST_DESC: 'Uses mana system (for future implementation)'
-    },
-    SPELL_SCHOOLS: {
-        ABJURATION: 'Abjuration',
-        CONJURATION: 'Conjuration',
-        DIVINATION: 'Divination',
-        ENCHANTMENT: 'Enchantment',
-        EVOCATION: 'Evocation',
-        ILLUSION: 'Illusion',
-        NECROMANCY: 'Necromancy',
-        TRANSMUTATION: 'Transmutation'
-    },
-    SPELL_CLASSES: {
-        BARD: 'Bard',
-        CLERIC: 'Cleric',
-        DRUID: 'Druid',
-        PALADIN: 'Paladin',
-        RANGER: 'Ranger',
-        SORCERER: 'Sorcerer',
-        WARLOCK: 'Warlock',
-        WIZARD: 'Wizard',
-        ARTIFICER: 'Artificer'
-    },
-    ACTION_TYPES: {
-        ACTION: 'Action',
-        BONUS_ACTION: 'Bonus Action',
-        REACTION: 'Reaction',
-        MINUTE: '1 Minute',
-        HOUR: '1 Hour',
-        SPECIAL: 'Special'
     }
 } as const;
 
@@ -182,35 +153,6 @@ export const SPELLS_LOCALE_RU = {
         CANTRIP_UPGRADE_PLACEHOLDER: 'Урон увеличивается на 1d6 на уровнях 5, 11 и 17.',
         MANA_COST: 'Затраты маны',
         MANA_COST_DESC: 'Использует ману (для будущей реализации)'
-    },
-    SPELL_SCHOOLS: {
-        ABJURATION: 'Ограждение',
-        CONJURATION: 'Призыв',
-        DIVINATION: 'Прорицание',
-        ENCHANTMENT: 'Очарование',
-        EVOCATION: 'Воплощение',
-        ILLUSION: 'Иллюзия',
-        NECROMANCY: 'Некромантия',
-        TRANSMUTATION: 'Преобразование'
-    },
-    SPELL_CLASSES: {
-        BARD: 'Бард',
-        CLERIC: 'Жрец',
-        DRUID: 'Друид',
-        PALADIN: 'Паладин',
-        RANGER: 'Следопыт',
-        SORCERER: 'Чародей',
-        WARLOCK: 'Колдун',
-        WIZARD: 'Волшебник',
-        ARTIFICER: 'Изобретатель'
-    },
-    ACTION_TYPES: {
-        ACTION: 'Действие',
-        BONUS_ACTION: 'Бонусное действие',
-        REACTION: 'Реакция',
-        MINUTE: '1 минута',
-        HOUR: '1 час',
-        SPECIAL: 'Особое'
     }
 } as const;
 
