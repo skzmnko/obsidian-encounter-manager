@@ -1,7 +1,7 @@
 {
+  "language": "ru",
   "defaultHP": 100,
   "autoSave": true,
   "roundTimer": 60,
-  "encountersFolder": "Encounters",
-  "language": "ru"
+  "encountersFolder": "Encounters"
 }

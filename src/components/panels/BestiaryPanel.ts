@@ -29,7 +29,7 @@ export class BestiaryPanel extends ItemView {
     }
 
     getIcon(): string {
-        return 'dragon';
+        return 'feather';
     }
 
     async onOpen() {
