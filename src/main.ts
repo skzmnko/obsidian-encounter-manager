@@ -1,20 +1,14 @@
-// main.ts
 import { Plugin } from 'obsidian';
 import { EncounterManagerSettings, DEFAULT_SETTINGS } from 'src/models/Settings';
 import { BestiaryService } from 'src/services/BestiaryService';
 import { BestiaryPanel, BESTIARY_VIEW_TYPE } from 'src/components/panels/BestiaryPanel';
 import { SpellsPanel, SPELLS_VIEW_TYPE } from 'src/components/panels/SpellsPanel';
-import { EncounterService } from 'src/services/EncounterService';
-import { UIService } from 'src/services/UIService';
 import { SpellService } from 'src/services/SpellService';
-import { EncounterTypeModal } from 'src/components/modals/EncounterTypeModal';
 import { DnDToolsSettingTab } from 'src/components/settings/DnDToolsSettingTab';
 import { i18n } from 'src/services/LocalizationService';
 
 export default class DnDToolsPlugin extends Plugin {
     settings!: EncounterManagerSettings;
-    encounterService!: EncounterService;
-    uiService!: UIService;
     bestiaryService!: BestiaryService;
     spellService!: SpellService;
 
@@ -24,27 +18,13 @@ export default class DnDToolsPlugin extends Plugin {
         this.setupLocalization();
         
         try {
-            // Инициализация сервисов
-            this.encounterService = new EncounterService(this);
-            this.uiService = new UIService(this.app);
             this.bestiaryService = new BestiaryService(this);
             this.spellService = new SpellService(this);
             
-            // Инициализация данных
-            await this.encounterService.initialize();
             await this.bestiaryService.initialize();
             await this.spellService.initialize();
 
             console.log('All services initialized successfully');
-
-            // Commands
-            this.addCommand({
-                id: 'create-encounter',
-                name: this.getLocalizedCommandName('Create new encounter', 'Создать новую встречу'),
-                callback: () => {
-                    new EncounterTypeModal(this.app, this).open();
-                }
-            });
 
             this.addCommand({
                 id: 'open-bestiary',
@@ -62,11 +42,6 @@ export default class DnDToolsPlugin extends Plugin {
                 }
             });
 
-            // Ribbon icons
-            this.addRibbonIcon('swords', this.getLocalizedCommandName('Encounter Manager', 'Менеджер встреч'), () => {
-                new EncounterTypeModal(this.app, this).open();
-            });
-
             this.addRibbonIcon('feather', this.getLocalizedCommandName('Open Bestiary', 'Открыть Бестиарий'), () => {
                 this.activateBestiaryView();
             });
@@ -77,7 +52,6 @@ export default class DnDToolsPlugin extends Plugin {
 
             this.addSettingTab(new DnDToolsSettingTab(this.app, this));
             
-            // Register views with proper factory functions
             this.registerView(
                 BESTIARY_VIEW_TYPE,
                 (leaf) => new BestiaryPanel(leaf, this.bestiaryService)
@@ -87,12 +61,6 @@ export default class DnDToolsPlugin extends Plugin {
                 SPELLS_VIEW_TYPE,
                 (leaf) => new SpellsPanel(leaf, this.spellService)
             );
-
-            this.registerMarkdownCodeBlockProcessor('encounter', (source, el, ctx) => {
-                this.uiService.renderEncounterBlock(source, el, (type: string) => 
-                    this.encounterService.getEncounterTypeLabel(type)
-                );
-            });
 
             console.log('D&D Tools plugin loaded successfully');
         } catch (error) {
@@ -154,7 +122,6 @@ export default class DnDToolsPlugin extends Plugin {
 
         workspace.revealLeaf(leaf);
         
-        // Ensure the view is properly initialized
         const view = leaf.view as BestiaryPanel;
         if (view && typeof view.onOpen === 'function') {
             await view.onOpen();
@@ -184,7 +151,6 @@ export default class DnDToolsPlugin extends Plugin {
 
         workspace.revealLeaf(leaf);
         
-        // Ensure the view is properly initialized
         const view = leaf.view as SpellsPanel;
         if (view && typeof view.onOpen === 'function') {
             await view.onOpen();
@@ -199,12 +165,7 @@ export default class DnDToolsPlugin extends Plugin {
         await this.saveData(this.settings);
     }
 
-    getEncountersFolderPath(): string {
-        return `${this.manifest.dir}/encounters`;
-    }
-
     onunload() {
         console.log('Unloading D&D Tools plugin...');
-        // Clean up any resources if needed
     }
 }

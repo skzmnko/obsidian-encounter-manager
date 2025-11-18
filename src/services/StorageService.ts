@@ -9,59 +9,6 @@ export class StorageService {
         this.plugin = plugin;
     }
 
-    async loadEncountersByDate(date: Date): Promise<any> {
-        try {
-            const fileName = this.getDateFileName(date);
-            const filePath = this.getEncountersFilePath(fileName);
-            
-            const file = this.plugin.app.vault.getAbstractFileByPath(filePath);
-            
-            if (file && file instanceof TFile) {
-                const content = await this.plugin.app.vault.read(file);
-                return JSON.parse(content);
-            }
-            
-            return { encounters: [], lastUpdated: Date.now() };
-        } catch (error) {
-            console.error('Error loading encounters by date:', error);
-            return { encounters: [], lastUpdated: Date.now() };
-        }
-    }
-
-    async saveEncountersByDate(date: Date, data: any): Promise<void> {
-        try {
-            const fileName = this.getDateFileName(date);
-            const filePath = this.getEncountersFilePath(fileName);
-            
-            let file = this.plugin.app.vault.getAbstractFileByPath(filePath);
-            
-            if (file && file instanceof TFile) {
-                await this.plugin.app.vault.modify(file, JSON.stringify(data, null, 2));
-            } else {
-                file = await this.plugin.app.vault.create(filePath, JSON.stringify(data, null, 2));
-            }
-            
-        } catch (error) {
-            console.error('Error saving encounters by date:', error);
-            throw error;
-        }
-    }
-
-    private getDateFileName(date: Date): string {
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        return `encounters_${day}.${month}.${year}.json`;
-    }
-
-    private getEncountersFolderPath(): string {
-        return normalizePath(`${this.plugin.manifest.dir}/encounters`);
-    }
-
-    private getEncountersFilePath(fileName: string): string {
-        return normalizePath(`${this.getEncountersFolderPath()}/${fileName}`);
-    }
-
     async loadBestiaryData(): Promise<BestiaryData> {
         try {
             const filePath = this.getBestiaryFilePath();
@@ -156,7 +103,7 @@ export class StorageService {
             
         } catch (error) {
             console.error('Error saving spells data:', error);
-            throw error;
+            throw new Error(`Failed to save spells: ${error.message}`);
         }
     }
 
@@ -185,10 +132,11 @@ export class StorageService {
     }
 
     async loadData(): Promise<any> {
-        return await this.loadEncountersByDate(new Date());
+        return await this.loadBestiaryData();
     }
 
     async saveData(data: any): Promise<void> {
-        await this.saveEncountersByDate(new Date(), data);
+        // Для совместимости с основным плагином
+        console.log('Save data called:', data);
     }
 }
