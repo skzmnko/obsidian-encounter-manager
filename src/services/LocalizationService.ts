@@ -1,4 +1,5 @@
 import { LOCALE_EN, LOCALE_RU } from 'src/constants/bestiary_i18n';
+import { SPELLS_LOCALE_EN, SPELLS_LOCALE_RU } from 'src/constants/spells_i18n';
 import { 
     GAME_DATA_EN, 
     GAME_DATA_RU,
@@ -8,7 +9,10 @@ import {
     AlignmentKey, 
     DamageTypeKey, 
     ConditionKey,
-    ConditionDescriptionKey
+    ConditionDescriptionKey,
+    SpellSchoolKey,
+    SpellClassKey,
+    ActionTypeKey
 } from 'src/constants/game_data_i18n';
 
 type GameDataCategory = 
@@ -17,14 +21,16 @@ type GameDataCategory =
     | { [key in AlignmentKey]: string }
     | { [key in DamageTypeKey]: string }
     | { [key in ConditionKey]: string }
-    | { [key in ConditionKey]: string }
-    | { [key in ConditionDescriptionKey]: string };
+    | { [key in ConditionDescriptionKey]: string }
+    | { [key in SpellSchoolKey]: string }
+    | { [key in SpellClassKey]: string }
+    | { [key in ActionTypeKey]: string };
 
 export class LocalizationService {
     private currentLocale: 'en' | 'ru' = 'en';
     private uiDictionaries = {
-        en: LOCALE_EN,
-        ru: LOCALE_RU
+        en: { ...LOCALE_EN, ...SPELLS_LOCALE_EN },
+        ru: { ...LOCALE_RU, ...SPELLS_LOCALE_RU }
     };
     private gameDataDictionaries = {
         en: GAME_DATA_EN,
@@ -107,6 +113,18 @@ export class LocalizationService {
         return this.getGameData('CONDITION_DESCRIPTIONS', key);
     }
 
+    getSpellSchool(key: SpellSchoolKey): string {
+        return this.getGameData('SPELL_SCHOOLS', key);
+    }
+
+    getSpellClass(key: SpellClassKey): string {
+        return this.getGameData('SPELL_CLASSES', key);
+    }
+
+    getActionType(key: ActionTypeKey): string {
+        return this.getGameData('ACTION_TYPES', key);
+    }
+
     getAllConditionDescriptions(): { [key: string]: string } {
         return this.getGameDataCategory('CONDITION_DESCRIPTIONS');
     }
@@ -139,7 +157,7 @@ export class LocalizationService {
 
     private getUIFallback(key: string): string {
         const keys = key.split('.');
-        let value: any = LOCALE_EN;
+        let value: any = { ...LOCALE_EN, ...SPELLS_LOCALE_EN };
         
         for (const k of keys) {
             if (value && value[k] !== undefined) {

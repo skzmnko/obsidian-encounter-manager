@@ -1,5 +1,6 @@
 import { TFile, normalizePath } from 'obsidian';
 import { Creature, BestiaryData } from 'src/models/Bestiary';
+import { Spell, SpellsData } from 'src/models/Spells';
 
 export class StorageService {
     private plugin: any;
@@ -110,6 +111,57 @@ export class StorageService {
 
     private getBestiaryFilePath(): string {
         return normalizePath('storage/bestiary.json');
+    }
+
+    async loadSpellsData(): Promise<SpellsData> {
+        try {
+            const filePath = this.getSpellsFilePath();
+            console.log('Loading spells from:', filePath);
+            
+            const file = this.plugin.app.vault.getAbstractFileByPath(filePath);
+            
+            if (file && file instanceof TFile) {
+                const content = await this.plugin.app.vault.read(file);
+                const data = JSON.parse(content);
+                console.log('Spells data loaded:', data.spells?.length || 0, 'spells');
+                return data;
+            }
+            
+            console.log('Spells file not found, creating default data');
+            return { spells: [], lastUpdated: Date.now() };
+        } catch (error) {
+            console.error('Error loading spells data:', error);
+            return { spells: [], lastUpdated: Date.now() };
+        }
+    }
+
+    async saveSpellsData(data: SpellsData): Promise<void> {
+        try {
+            const filePath = this.getSpellsFilePath();
+            console.log('Saving spells to:', filePath, 'spells:', data.spells.length);
+            
+            await this.ensureStorageFolder();
+            
+            let file = this.plugin.app.vault.getAbstractFileByPath(filePath);
+            
+            if (file && file instanceof TFile) {
+                console.log('Updating existing spells file');
+                await this.plugin.app.vault.modify(file, JSON.stringify(data, null, 2));
+            } else {
+                console.log('Creating new spells file');
+                file = await this.plugin.app.vault.create(filePath, JSON.stringify(data, null, 2));
+            }
+            
+            console.log('Spells data saved successfully');
+            
+        } catch (error) {
+            console.error('Error saving spells data:', error);
+            throw error;
+        }
+    }
+
+    private getSpellsFilePath(): string {
+        return normalizePath('storage/spells.json');
     }
 
     private async ensureStorageFolder(): Promise<void> {

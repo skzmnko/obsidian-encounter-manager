@@ -5,7 +5,10 @@ import {
     AlignmentKey, 
     DamageTypeKey, 
     ConditionKey,
-    ConditionDescriptionKey
+    ConditionDescriptionKey,
+    SpellSchoolKey,
+    SpellClassKey,
+    ActionTypeKey
 } from './game_data_i18n';
 
 export const CREATURE_TYPES: readonly CreatureTypeKey[] = [
@@ -99,11 +102,45 @@ export const CONDITION_DESCRIPTIONS: readonly ConditionDescriptionKey[] = [
     'UNCONSCIOUS'
 ] as const;
 
+export const SPELL_SCHOOLS: readonly SpellSchoolKey[] = [
+        'ABJURATION',
+        'CONJURATION',
+        'DIVINATION',
+        'ENCHANTMENT',
+        'EVOCATION',
+        'ILLUSION',
+        'NECROMANCY',
+        'TRANSMUTATION'
+] as const;
+
+export const SPELL_CLASSES: readonly SpellClassKey[] = [
+    'ARTIFICER',
+    'BARD',
+    'CLERIC',
+    'DRUID',
+    'PALADIN',
+    'RANGER',
+    'SORCERER',
+    'WARLOCK',
+    'WIZARD'
+] as const;
+
+export const ACTION_TYPES: readonly ActionTypeKey[] = [
+    'ACTION',
+    'BONUS_ACTION',
+    'REACTION',
+    'MINUTE',
+    'HOUR'
+]
+
 export type CreatureType = CreatureTypeKey;
 export type CreatureSize = SizeKey;
 export type Alignment = AlignmentKey;
 export type DamageType = DamageTypeKey;
 export type Condition = ConditionKey;
 export type ConditionDescription = ConditionDescriptionKey;
+export type SpellSchool = SpellSchoolKey;
+export type SpellClass = SpellClassKey;
+export type ActionType = ActionTypeKey;
 
-export type { CreatureTypeKey, SizeKey, AlignmentKey, DamageTypeKey, ConditionKey };
+export type { CreatureTypeKey, SizeKey, AlignmentKey, DamageTypeKey, ConditionKey, SpellSchoolKey, SpellClassKey, ActionTypeKey };
