@@ -89,6 +89,34 @@ export const GAME_DATA_EN = {
         RESTRAINED: 'A restrained creature\'s speed becomes 0, and it can\'t benefit from any bonus to its speed. Attack rolls against the creature have advantage, and the creature\'s attack rolls have disadvantage. The creature has disadvantage on Dexterity saving throws.',
         STUNNED: 'A stunned creature is incapacitated, can\'t move, and can speak only falteringly. The creature automatically fails Strength and Dexterity saving throws. Attack rolls against the creature have advantage.',
         UNCONSCIOUS: 'An unconscious creature is incapacitated, can\'t move or speak, and is unaware of its surroundings. The creature drops whatever it\'s holding and falls prone. The creature automatically fails Strength and Dexterity saving throws. Attack rolls against the creature have advantage. Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.'
+    },
+    SPELL_SCHOOLS: {
+        ABJURATION: 'Abjuration',
+        CONJURATION: 'Conjuration',
+        DIVINATION: 'Divination',
+        ENCHANTMENT: 'Enchantment',
+        EVOCATION: 'Evocation',
+        ILLUSION: 'Illusion',
+        NECROMANCY: 'Necromancy',
+        TRANSMUTATION: 'Transmutation'
+    },
+    SPELL_CLASSES: {
+        BARD: 'Bard',
+        CLERIC: 'Cleric',
+        DRUID: 'Druid',
+        PALADIN: 'Paladin',
+        RANGER: 'Ranger',
+        SORCERER: 'Sorcerer',
+        WARLOCK: 'Warlock',
+        WIZARD: 'Wizard',
+        ARTIFICER: 'Artificer'
+    },
+    ACTION_TYPES: {
+        ACTION: 'Action',
+        BONUS_ACTION: 'Bonus action',
+        REACTION: 'Reaction',
+        MINUTE: 'Minute',
+        HOUR: 'Hour'
     }
 } as const;
 
@@ -183,6 +211,34 @@ export const GAME_DATA_RU = {
         RESTRAINED: 'Скорость опутанного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости. Броски атаки по такому существу совершаются с преимуществом, а его броски атаки — с помехой. Существо совершает с помехой спасброски Ловкости.',
         STUNNED: 'Ошеломлённое существо недееспособно, не способно перемещаться и говорит, запинаясь. Существо автоматически проваливает спасброски Силы и Ловкости. Броски атаки по существу совершаются с преимуществом.',
         UNCONSCIOUS: 'Находящееся без сознания существо недееспособно, не способно перемещаться и говорить, а также не осознаёт своё окружение. Существо роняет всё, что держит, и падает ничком. Существо автоматически проваливает спасброски Силы и Ловкости. Броски атаки по существу совершаются с преимуществом. Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от него.'
+    },
+    SPELL_SCHOOLS: {
+        ABJURATION: 'Ограждение',
+        CONJURATION: 'Воплощение',
+        DIVINATION: 'Прорицание',
+        ENCHANTMENT: 'Очарование',
+        EVOCATION: 'Иллюзия',
+        ILLUSION: 'Преобразование',
+        NECROMANCY: 'Некромантия',
+        TRANSMUTATION: 'Призыв'
+    },
+    SPELL_CLASSES: {
+        BARD: 'Бард',
+        CLERIC: 'Жрец',
+        DRUID: 'Друид',
+        PALADIN: 'Паладин',
+        RANGER: 'Следопыт',
+        SORCERER: 'Чародей',
+        WARLOCK: 'Колдун',
+        WIZARD: 'Волшебник',
+        ARTIFICER: 'Изобретатель'
+    },
+    ACTION_TYPES: {
+        ACTION: 'Действие',
+        BONUS_ACTION: 'Бонусное действие',
+        REACTION: 'Реакция',
+        MINUTE: '1 минута',
+        HOUR: '1 час'
     }
 } as const;
 
@@ -193,3 +249,6 @@ export type AlignmentKey = keyof typeof GAME_DATA_EN.ALIGNMENTS;
 export type DamageTypeKey = keyof typeof GAME_DATA_EN.DAMAGE_TYPES;
 export type ConditionKey = keyof typeof GAME_DATA_EN.CONDITIONS;
 export type ConditionDescriptionKey = keyof typeof GAME_DATA_EN.CONDITION_DESCRIPTIONS;
+export type SpellSchoolKey = keyof typeof GAME_DATA_EN.SPELL_SCHOOLS;
+export type SpellClassKey = keyof typeof GAME_DATA_EN.SPELL_CLASSES;
+export type ActionTypeKey = keyof typeof GAME_DATA_EN.ACTION_TYPES;

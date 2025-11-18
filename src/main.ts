@@ -3,8 +3,10 @@ import { Plugin } from 'obsidian';
 import { EncounterManagerSettings, DEFAULT_SETTINGS } from 'src/models/Settings';
 import { BestiaryService } from 'src/services/BestiaryService';
 import { BestiaryPanel, BESTIARY_VIEW_TYPE } from 'src/components/panels/BestiaryPanel';
+import { SpellsPanel, SPELLS_VIEW_TYPE } from 'src/components/panels/SpellsPanel';
 import { EncounterService } from 'src/services/EncounterService';
 import { UIService } from 'src/services/UIService';
+import { SpellService } from 'src/services/SpellService';
 import { EncounterTypeModal } from 'src/components/modals/EncounterTypeModal';
 import { DnDToolsSettingTab } from 'src/components/settings/DnDToolsSettingTab';
 import { i18n } from 'src/services/LocalizationService';
@@ -14,6 +16,7 @@ export default class DnDToolsPlugin extends Plugin {
     encounterService!: EncounterService;
     uiService!: UIService;
     bestiaryService!: BestiaryService;
+    spellService!: SpellService;
 
     async onload() {
         console.log('Loading D&D Tools plugin...');
@@ -21,12 +24,20 @@ export default class DnDToolsPlugin extends Plugin {
         this.setupLocalization();
         
         try {
+            // Инициализация сервисов
             this.encounterService = new EncounterService(this);
             this.uiService = new UIService(this.app);
             this.bestiaryService = new BestiaryService(this);
+            this.spellService = new SpellService(this);
+            
+            // Инициализация данных
             await this.encounterService.initialize();
             await this.bestiaryService.initialize();
+            await this.spellService.initialize();
 
+            console.log('All services initialized successfully');
+
+            // Commands
             this.addCommand({
                 id: 'create-encounter',
                 name: this.getLocalizedCommandName('Create new encounter', 'Создать новую встречу'),
@@ -43,6 +54,15 @@ export default class DnDToolsPlugin extends Plugin {
                 }
             });
 
+            this.addCommand({
+                id: 'open-spells',
+                name: this.getLocalizedCommandName('Open Spells', 'Открыть Заклинания'),
+                callback: () => {
+                    this.activateSpellsView();
+                }
+            });
+
+            // Ribbon icons
             this.addRibbonIcon('swords', this.getLocalizedCommandName('Encounter Manager', 'Менеджер встреч'), () => {
                 new EncounterTypeModal(this.app, this).open();
             });
@@ -51,10 +71,21 @@ export default class DnDToolsPlugin extends Plugin {
                 this.activateBestiaryView();
             });
 
+            this.addRibbonIcon('sparkles', this.getLocalizedCommandName('Open Spells', 'Открыть Заклинания'), () => {
+                this.activateSpellsView();
+            });
+
             this.addSettingTab(new DnDToolsSettingTab(this.app, this));
+            
+            // Register views with proper factory functions
             this.registerView(
                 BESTIARY_VIEW_TYPE,
                 (leaf) => new BestiaryPanel(leaf, this.bestiaryService)
+            );
+
+            this.registerView(
+                SPELLS_VIEW_TYPE,
+                (leaf) => new SpellsPanel(leaf, this.spellService)
             );
 
             this.registerMarkdownCodeBlockProcessor('encounter', (source, el, ctx) => {
@@ -72,16 +103,26 @@ export default class DnDToolsPlugin extends Plugin {
     private setupLocalization() {
         i18n.setLocale(this.settings.language);
 
-        i18n.onLocaleChange(() => {
+        i18n.onLocaleChange((locale: 'en' | 'ru') => {
             this.refreshAllBestiaryViews();
+            this.refreshAllSpellsViews();
         });
     }
 
     private refreshAllBestiaryViews() {
         this.app.workspace.getLeavesOfType(BESTIARY_VIEW_TYPE).forEach(leaf => {
             const view = leaf.view as BestiaryPanel;
-            if (view && typeof (view as any).refreshLocalization === 'function') {
-                (view as any).refreshLocalization();
+            if (view && typeof view.refreshLocalization === 'function') {
+                view.refreshLocalization();
+            }
+        });
+    }
+
+    private refreshAllSpellsViews() {
+        this.app.workspace.getLeavesOfType(SPELLS_VIEW_TYPE).forEach(leaf => {
+            const view = leaf.view as SpellsPanel;
+            if (view && typeof view.refreshLocalization === 'function') {
+                view.refreshLocalization();
             }
         });
     }
@@ -92,7 +133,6 @@ export default class DnDToolsPlugin extends Plugin {
 
     async activateBestiaryView() {
         const { workspace } = this.app;
-
         let leaf = workspace.getLeavesOfType(BESTIARY_VIEW_TYPE)[0];
 
         if (!leaf) {
@@ -113,6 +153,42 @@ export default class DnDToolsPlugin extends Plugin {
         }
 
         workspace.revealLeaf(leaf);
+        
+        // Ensure the view is properly initialized
+        const view = leaf.view as BestiaryPanel;
+        if (view && typeof view.onOpen === 'function') {
+            await view.onOpen();
+        }
+    }
+
+    async activateSpellsView() {
+        const { workspace } = this.app;
+        let leaf = workspace.getLeavesOfType(SPELLS_VIEW_TYPE)[0];
+
+        if (!leaf) {
+            const rightLeaf = workspace.getRightLeaf(false);
+            if (rightLeaf) {
+                leaf = rightLeaf;
+                await leaf.setViewState({
+                    type: SPELLS_VIEW_TYPE,
+                    active: true,
+                });
+            } else {
+                leaf = workspace.getLeaf('tab');
+                await leaf.setViewState({
+                    type: SPELLS_VIEW_TYPE,
+                    active: true,
+                });
+            }
+        }
+
+        workspace.revealLeaf(leaf);
+        
+        // Ensure the view is properly initialized
+        const view = leaf.view as SpellsPanel;
+        if (view && typeof view.onOpen === 'function') {
+            await view.onOpen();
+        }
     }
 
     async loadSettings() {
@@ -128,6 +204,7 @@ export default class DnDToolsPlugin extends Plugin {
     }
 
     onunload() {
-        i18n.offLocaleChange(this.refreshAllBestiaryViews);
+        console.log('Unloading D&D Tools plugin...');
+        // Clean up any resources if needed
     }
 }
