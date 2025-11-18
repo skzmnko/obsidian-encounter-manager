@@ -24,7 +24,6 @@ export const SPELLS_LOCALE_EN = {
         EDIT_SINGLE_ONLY: 'Please select only one spell to edit',
         VIEW_IN_PROGRESS: 'Viewing in development',
         SEARCH_PLACEHOLDER: 'Search by name...',
-        SPELL_DETAILS: 'Level {level} {school}',
         ALPHABETICAL_SECTIONS: 'Alphabetical Sections',
         DELETE_CONFIRM_SINGLE: 'Are you sure you want to delete "{name}"? This action cannot be undone.',
         DELETE_CONFIRM_MULTIPLE: 'Are you sure you want to delete {count} spells? This action cannot be undone.',
@@ -75,7 +74,9 @@ export const SPELLS_LOCALE_EN = {
         CANTRIP_UPGRADE_DESC: 'How the spell improves at higher levels or for cantrips',
         CANTRIP_UPGRADE_PLACEHOLDER: 'The damage increases by 1d6 when you reach levels 5, 11, and 17.',
         MANA_COST: 'Mana Cost',
-        MANA_COST_DESC: 'Uses mana system (for future implementation)'
+        MANA_COST_DESC: 'Uses mana system (for future implementation)',
+        CANTRIP: 'Cantrip',
+        SPELLEVEL: 'Level'
     }
 } as const;
 
@@ -105,7 +106,6 @@ export const SPELLS_LOCALE_RU = {
         EDIT_SINGLE_ONLY: 'Пожалуйста, выберите только одно заклинание для редактирования',
         VIEW_IN_PROGRESS: 'Просмотр в разработке',
         SEARCH_PLACEHOLDER: 'Поиск по названию...',
-        SPELL_DETAILS: '{level} круг, {school}',
         ALPHABETICAL_SECTIONS: 'Алфавитные разделы',
         DELETE_CONFIRM_SINGLE: 'Вы уверены, что хотите удалить "{name}"? Это действие нельзя отменить.',
         DELETE_CONFIRM_MULTIPLE: 'Вы уверены, что хотите удалить {count} заклинаний? Это действие нельзя отменить.',
@@ -156,7 +156,9 @@ export const SPELLS_LOCALE_RU = {
         CANTRIP_UPGRADE_DESC: 'Как заклинание улучшается на высоких уровнях или для заговоров',
         CANTRIP_UPGRADE_PLACEHOLDER: 'Урон увеличивается на 1d6 на уровнях 5, 11 и 17.',
         MANA_COST: 'Затраты маны',
-        MANA_COST_DESC: 'Использует ману (для будущей реализации)'
+        MANA_COST_DESC: 'Использует ману (для будущей реализации)',
+        CANTRIP: 'Заговор',
+        SPELLEVEL: 'Уровень'
     }
 } as const;
 

@@ -100,6 +100,7 @@ export class SpellsPanel extends ItemView {
             this.editSelectedSpells();
         });
         this.editButton.disabled = true;
+
         this.deleteButton = buttonsContainer.createEl('button', { 
             text: i18n.t('SPELLS.DELETE'),
             cls: 'mod-warning'
@@ -253,39 +254,15 @@ export class SpellsPanel extends ItemView {
         });
 
         const detailsRow = spellContent.createDiv({ cls: 'spell-details-row' });
-        const levelText = spell.level === 0 ? 'Cantrip' : `Level ${spell.level}`;
+        const levelText = spell.level === 0 ? 
+            i18n.t('SPELL_FIELDS.CANTRIP') : 
+            `${i18n.t('SPELL_FIELDS.SPELLEVEL')} ${spell.level}`;
+        
         const basicInfo = detailsRow.createEl('span', { 
-            text: `${levelText} ${spell.school}`,
+            text: `${levelText}, ${spell.school}`,
             cls: 'spell-basic-info'
         });
 
-        const castingInfo = detailsRow.createEl('span', { 
-            text: ` • ${spell.castingTime} • ${spell.range}`,
-            cls: 'spell-casting-info'
-        });
-
-        const components = [];
-        if (spell.components.verbal) components.push('V');
-        if (spell.components.somatic) components.push('S');
-        if (spell.components.material) components.push('M');
-        
-        if (components.length > 0) {
-            const componentsInfo = detailsRow.createEl('span', { 
-                text: ` • ${components.join(', ')}`,
-                cls: 'spell-components-info'
-            });
-        }
-
-        const flags = [];
-        if (spell.concentration) flags.push(i18n.t('SPELL_FIELDS.CONCENTRATION'));
-        if (spell.ritual) flags.push(i18n.t('SPELL_FIELDS.RITUAL'));
-        
-        if (flags.length > 0) {
-            const flagsInfo = detailsRow.createEl('span', { 
-                text: ` • ${flags.join(', ')}`,
-                cls: 'spell-flags-info'
-            });
-        }
     }
 
     private toggleSpellSelection(spellId: string, selected: boolean) {
