@@ -10,12 +10,14 @@ export class SpellDescriptionComponent {
   }
 
   render(container: HTMLElement) {
-    container.createEl("h3", {
+    const section = container.createDiv({ cls: "creature-section" });
+
+    section.createEl("h3", {
       text: i18n.t("SPELL_FIELDS.DESCRIPTION"),
-      cls: "spell-section-title",
+      cls: "section-title",
     });
 
-    const descriptionContainer = container.createDiv("description-section");
+    const descriptionContainer = section.createDiv("description-section");
 
     new Setting(descriptionContainer)
       .setName(i18n.t("SPELL_FIELDS.MANA_COST"))

@@ -16,12 +16,14 @@ export class SpellBasicFieldsComponent {
   }
 
   render(container: HTMLElement) {
-    container.createEl("h3", {
+    const section = container.createDiv({ cls: "creature-section" });
+
+    section.createEl("h3", {
       text: i18n.t("SPELL_FIELDS.TITLE"),
-      cls: "spell-section-title",
+      cls: "section-title",
     });
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.NAME"))
       .setDesc(i18n.t("SPELL_FIELDS.NAME_DESC"))
       .addText((text) =>
@@ -31,7 +33,7 @@ export class SpellBasicFieldsComponent {
           .onChange((value) => (this.spellData.name = value)),
       );
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.LEVEL"))
       .setDesc(i18n.t("SPELL_FIELDS.LEVEL_DESC"))
       .addDropdown((dropdown) => {
@@ -44,7 +46,7 @@ export class SpellBasicFieldsComponent {
           .onChange((value) => (this.spellData.level = parseInt(value)));
       });
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.SCHOOL"))
       .setDesc(i18n.t("SPELL_FIELDS.SCHOOL_DESC"))
       .addDropdown((dropdown) => {
@@ -61,7 +63,7 @@ export class SpellBasicFieldsComponent {
           .onChange((value) => (this.spellData.school = value));
       });
 
-    const classesSetting = new Setting(container)
+    const classesSetting = new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.CLASSES"))
       .setDesc(i18n.t("SPELL_FIELDS.CLASSES_DESC"))
       .addDropdown((dropdown) => {
@@ -79,12 +81,12 @@ export class SpellBasicFieldsComponent {
         });
       });
 
-    this.selectedClassesContainer = container.createDiv(
+    this.selectedClassesContainer = section.createDiv(
       "selected-classes-container",
     );
     this.updateSelectedClassesDisplay();
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.ACTION_TYPE"))
       .setDesc(i18n.t("SPELL_FIELDS.ACTION_TYPE_DESC"))
       .addDropdown((dropdown) => {
@@ -99,7 +101,7 @@ export class SpellBasicFieldsComponent {
           );
       });
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.CONCENTRATION"))
       .setDesc(i18n.t("SPELL_FIELDS.CONCENTRATION_DESC"))
       .addToggle((toggle) =>
@@ -108,7 +110,7 @@ export class SpellBasicFieldsComponent {
           .onChange((value) => (this.spellData.concentration = value)),
       );
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.RITUAL"))
       .setDesc(i18n.t("SPELL_FIELDS.RITUAL_DESC"))
       .addToggle((toggle) =>
@@ -117,7 +119,7 @@ export class SpellBasicFieldsComponent {
           .onChange((value) => (this.spellData.ritual = value)),
       );
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.CASTING_TIME"))
       .setDesc(i18n.t("SPELL_FIELDS.CASTING_TIME_DESC"))
       .addText((text) =>
@@ -127,7 +129,7 @@ export class SpellBasicFieldsComponent {
           .onChange((value) => (this.spellData.castingTime = value)),
       );
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.RANGE"))
       .setDesc(i18n.t("SPELL_FIELDS.RANGE_DESC"))
       .addText((text) =>
@@ -137,7 +139,7 @@ export class SpellBasicFieldsComponent {
           .onChange((value) => (this.spellData.range = value)),
       );
 
-    new Setting(container)
+    new Setting(section)
       .setName(i18n.t("SPELL_FIELDS.DURATION"))
       .setDesc(i18n.t("SPELL_FIELDS.DURATION_DESC"))
       .addText((text) =>

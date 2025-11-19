@@ -13,12 +13,14 @@ export class SpellComponentsComponent {
   render(container: HTMLElement) {
     this.container = container;
 
-    container.createEl("h3", {
+    const section = container.createDiv({ cls: "creature-section" });
+
+    section.createEl("h3", {
       text: i18n.t("SPELL_FIELDS.COMPONENTS"),
-      cls: "spell-section-title",
+      cls: "section-title",
     });
 
-    const componentsContainer = container.createDiv("components-section");
+    const componentsContainer = section.createDiv("components-section");
 
     new Setting(componentsContainer)
       .setName(i18n.t("SPELL_FIELDS.VERBAL"))

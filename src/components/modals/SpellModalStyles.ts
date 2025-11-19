@@ -165,12 +165,14 @@ export const SpellModalStyles = `
     outline: none;
 }
 
-/* Стили для заголовков секций */
+/* Стили для заголовков секций - ОБНОВЛЕНО для соответствия CreatureModalStyles */
 .spell-section-title {
+    text-align: center !important;
+    width: 100% !important;
+    margin: 20px 0 15px 0 !important;
+    border-bottom: 1px solid var(--background-modifier-border) !important;
+    padding-bottom: 8px !important;
     color: var(--text-accent);
-    border-bottom: 2px solid var(--background-modifier-border);
-    padding-bottom: 5px;
-    margin: 20px 0 15px 0;
     font-size: 16px;
     font-weight: 600;
 }
@@ -206,5 +208,20 @@ export const SpellModalStyles = `
     .selected-value-remove {
         align-self: flex-end;
     }
+}
+
+/* Дополнительные стили для соответствия CreatureModalStyles */
+.creature-section {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.section-title {
+    text-align: center !important;
+    width: 100% !important;
+    margin: 20px 0 15px 0 !important;
+    border-bottom: 1px solid var(--background-modifier-border) !important;
+    padding-bottom: 8px !important;
 }
 `;
