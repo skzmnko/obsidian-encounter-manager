@@ -39,13 +39,14 @@ export class StorageService {
             await this.ensureStorageFolder();
             
             let file = this.plugin.app.vault.getAbstractFileByPath(filePath);
+            const content = this.customJSONStringify(data);
             
             if (file && file instanceof TFile) {
                 console.log('Updating existing bestiary file');
-                await this.plugin.app.vault.modify(file, JSON.stringify(data, null, 2));
+                await this.plugin.app.vault.modify(file, content);
             } else {
                 console.log('Creating new bestiary file');
-                file = await this.plugin.app.vault.create(filePath, JSON.stringify(data, null, 2));
+                file = await this.plugin.app.vault.create(filePath, content);
             }
             
             console.log('Bestiary data saved successfully');
@@ -90,13 +91,14 @@ export class StorageService {
             await this.ensureStorageFolder();
             
             let file = this.plugin.app.vault.getAbstractFileByPath(filePath);
+            const content = this.customJSONStringify(data);
             
             if (file && file instanceof TFile) {
                 console.log('Updating existing spells file');
-                await this.plugin.app.vault.modify(file, JSON.stringify(data, null, 2));
+                await this.plugin.app.vault.modify(file, content);
             } else {
                 console.log('Creating new spells file');
-                file = await this.plugin.app.vault.create(filePath, JSON.stringify(data, null, 2));
+                file = await this.plugin.app.vault.create(filePath, content);
             }
             
             console.log('Spells data saved successfully');
@@ -131,12 +133,37 @@ export class StorageService {
         }
     }
 
+    /**
+     * Custom JSON stringifier that formats simple arrays (strings, numbers) compactly
+     * while keeping complex objects and the overall structure nicely formatted
+     */
+    private customJSONStringify(data: any): string {
+        const jsonString = JSON.stringify(data, null, 2);
+        const compactArrays = jsonString.replace(
+            /(\"[^\"]+\"\s*:\s*)\[[\s\n]*([^\{\[\]]*?)[\s\n]*\]/g,
+            (match: string, prefix: string, arrayContent: string) => {
+                const cleanContent = arrayContent
+                    .split(',')
+                    .map((item: string) => item.trim())
+                    .filter((item: string) => item.length > 0)
+                    .join(', ');
+            
+                if (cleanContent && !cleanContent.includes('{') && !cleanContent.includes('[')) {
+                    return `${prefix}[${cleanContent}]`;
+                }
+                
+                return match;
+            }
+        );
+        
+        return compactArrays;
+    }
+
     async loadData(): Promise<any> {
         return await this.loadBestiaryData();
     }
 
     async saveData(data: any): Promise<void> {
-        // Для совместимости с основным плагином
         console.log('Save data called:', data);
     }
 }
