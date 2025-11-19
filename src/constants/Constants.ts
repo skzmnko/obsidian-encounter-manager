@@ -8,7 +8,8 @@ import {
     ConditionDescriptionKey,
     SpellSchoolKey,
     SpellClassKey,
-    ActionTypeKey
+    ActionTypeKey,
+    LevelKey
 } from './game_data_i18n';
 
 export const CREATURE_TYPES: readonly CreatureTypeKey[] = [
@@ -133,6 +134,19 @@ export const ACTION_TYPES: readonly ActionTypeKey[] = [
     'HOUR'
 ]
 
+export const SPELL_LEVELS: readonly LevelKey[] = [
+    'CANTRIP',
+    'LEVEL_1',
+    'LEVEL_2',
+    'LEVEL_3',
+    'LEVEL_4',
+    'LEVEL_5',
+    'LEVEL_6',
+    'LEVEL_7',
+    'LEVEL_8',
+    'LEVEL_9'
+]
+
 export type CreatureType = CreatureTypeKey;
 export type CreatureSize = SizeKey;
 export type Alignment = AlignmentKey;
@@ -142,5 +156,6 @@ export type ConditionDescription = ConditionDescriptionKey;
 export type SpellSchool = SpellSchoolKey;
 export type SpellClass = SpellClassKey;
 export type ActionType = ActionTypeKey;
+export type Level = LevelKey;
 
 export type { CreatureTypeKey, SizeKey, AlignmentKey, DamageTypeKey, ConditionKey, SpellSchoolKey, SpellClassKey, ActionTypeKey };

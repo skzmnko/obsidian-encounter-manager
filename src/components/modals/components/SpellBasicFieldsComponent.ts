@@ -5,6 +5,7 @@ import {
   SpellSchoolKey,
   SpellClassKey,
   ActionTypeKey,
+  LevelKey
 } from "src/constants/game_data_i18n";
 
 export class SpellBasicFieldsComponent {
@@ -37,10 +38,16 @@ export class SpellBasicFieldsComponent {
       .setName(i18n.t("SPELL_FIELDS.LEVEL"))
       .setDesc(i18n.t("SPELL_FIELDS.LEVEL_DESC"))
       .addDropdown((dropdown) => {
-        dropdown.addOption("0", "0 (Cantrip)");
+        const spellLevels = i18n.getGameDataCategory("SPELL_LEVELS");
+        
+        dropdown.addOption("0", spellLevels.CANTRIP || "0 (Cantrip)");
+        
         for (let i = 1; i <= 9; i++) {
-          dropdown.addOption(i.toString(), `${i} (Level ${i})`);
+          const levelKey = `LEVEL_${i}` as LevelKey;
+          const levelName = spellLevels[levelKey] || `Level ${i}`;
+          dropdown.addOption(i.toString(), `${levelName}`);
         }
+        
         dropdown
           .setValue(this.spellData.level?.toString() || "0")
           .onChange((value) => (this.spellData.level = parseInt(value)));

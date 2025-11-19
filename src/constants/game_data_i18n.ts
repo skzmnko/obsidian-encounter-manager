@@ -117,6 +117,18 @@ export const GAME_DATA_EN = {
         REACTION: 'Reaction',
         MINUTE: 'Minute',
         HOUR: 'Hour'
+    },
+    SPELL_LEVELS: {
+        CANTRIP: 'Cantrip',
+        LEVEL_1: 'Level 1',
+        LEVEL_2: 'Level 2',
+        LEVEL_3: 'Level 3',
+        LEVEL_4: 'Level 4',
+        LEVEL_5: 'Level 5',
+        LEVEL_6: 'Level 6',
+        LEVEL_7: 'Level 7',
+        LEVEL_8: 'Level 8',
+        LEVEL_9: 'Level 9'
     }
 } as const;
 
@@ -239,6 +251,18 @@ export const GAME_DATA_RU = {
         REACTION: 'Реакция',
         MINUTE: '1 минута',
         HOUR: '1 час'
+    },
+    SPELL_LEVELS: {
+        CANTRIP: 'Заговор',
+        LEVEL_1: 'Уровень 1',
+        LEVEL_2: 'Уровень 2',
+        LEVEL_3: 'Уровень 3',
+        LEVEL_4: 'Уровень 4',
+        LEVEL_5: 'Уровень 5',
+        LEVEL_6: 'Уровень 6',
+        LEVEL_7: 'Уровень 7',
+        LEVEL_8: 'Уровень 8',
+        LEVEL_9: 'Уровень 9'
     }
 } as const;
 
@@ -252,3 +276,4 @@ export type ConditionDescriptionKey = keyof typeof GAME_DATA_EN.CONDITION_DESCRI
 export type SpellSchoolKey = keyof typeof GAME_DATA_EN.SPELL_SCHOOLS;
 export type SpellClassKey = keyof typeof GAME_DATA_EN.SPELL_CLASSES;
 export type ActionTypeKey = keyof typeof GAME_DATA_EN.ACTION_TYPES;
+export type LevelKey = keyof typeof GAME_DATA_EN.SPELL_LEVELS;
