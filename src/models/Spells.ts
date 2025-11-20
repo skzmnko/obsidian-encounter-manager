@@ -1,28 +1,30 @@
+export interface SpellComponents {
+  verbal: boolean;
+  verbalDescription?: string;
+  somatic: boolean;
+  material: boolean;
+  materialDescription?: string;
+}
+
 export interface Spell {
-  id: string;
   name: string;
   level: number;
   school: string;
   classes: string[];
   actionType: string;
   castingTrigger?: string;
-  concentration: boolean;
-  ritual: boolean;
   castingTime: string;
   range: string;
-  components: {
-    verbal: boolean;
-    somatic: boolean;
-    material: boolean;
-    verbalDescription?: string;
-    materialDescription?: string;
-  };
   duration: string;
+  concentration: boolean;
+  ritual: boolean;
+  components: SpellComponents;
   description: string;
   spellUpgrade?: string;
   summonCreature: boolean;
   summonedCreatures: string[];
   manaCost?: boolean;
+  id: string;
   created: number;
   updated: number;
 }

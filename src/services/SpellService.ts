@@ -26,8 +26,32 @@ export class SpellService {
       await this.initialize();
     }
 
+    const components = {
+      verbal: spellData.components?.verbal || false,
+      verbalDescription: spellData.components?.verbalDescription || "",
+      somatic: spellData.components?.somatic || false,
+      material: spellData.components?.material || false,
+      materialDescription: spellData.components?.materialDescription || "",
+    };
+
     const spell: Spell = {
-      ...spellData,
+      name: spellData.name,
+      level: spellData.level,
+      school: spellData.school,
+      classes: spellData.classes,
+      actionType: spellData.actionType,
+      castingTrigger: spellData.castingTrigger || "",
+      castingTime: spellData.castingTime,
+      range: spellData.range,
+      duration: spellData.duration,
+      concentration: spellData.concentration,
+      ritual: spellData.ritual,
+      components: components,
+      description: spellData.description,
+      spellUpgrade: spellData.spellUpgrade || "",
+      summonCreature: spellData.summonCreature,
+      summonedCreatures: spellData.summonedCreatures,
+      manaCost: spellData.manaCost || false,
       id: this.generateId(),
       created: Date.now(),
       updated: Date.now(),
@@ -70,6 +94,16 @@ export class SpellService {
     if (index === -1) return null;
 
     const originalSpell = { ...this.spells[index] };
+
+    if (updates.components) {
+      updates.components = {
+        verbal: updates.components.verbal ?? originalSpell.components.verbal,
+        verbalDescription: updates.components.verbalDescription ?? originalSpell.components.verbalDescription ?? "",
+        somatic: updates.components.somatic ?? originalSpell.components.somatic,
+        material: updates.components.material ?? originalSpell.components.material,
+        materialDescription: updates.components.materialDescription ?? originalSpell.components.materialDescription ?? "",
+      };
+    }
 
     this.spells[index] = {
       ...this.spells[index],
@@ -128,6 +162,8 @@ export class SpellService {
       console.log("Loading spells from storage...");
       const data = await this.storage.loadSpellsData();
       this.spells = data?.spells || [];
+      this.spells = this.spells.map(spell => this.normalizeSpellStructure(spell));
+      
       console.log("Spells loaded successfully:", this.spells.length);
     } catch (error) {
       console.error("Error loading spells:", error);
@@ -139,8 +175,10 @@ export class SpellService {
     try {
       console.log("Saving spells to storage, count:", this.spells.length);
 
+      const normalizedSpells = this.spells.map(spell => this.normalizeSpellStructure(spell));
+
       const data: SpellsData = {
-        spells: this.spells,
+        spells: normalizedSpells,
         lastUpdated: Date.now(),
       };
 
@@ -150,6 +188,37 @@ export class SpellService {
       console.error("Error saving spells:", error);
       throw new Error(`Failed to save spells: ${error.message}`);
     }
+  }
+
+  private normalizeSpellStructure(spell: Spell): Spell {
+    return {
+      name: spell.name,
+      level: spell.level,
+      school: spell.school,
+      classes: spell.classes,
+      actionType: spell.actionType,
+      castingTrigger: spell.castingTrigger || "",
+      castingTime: spell.castingTime,
+      range: spell.range,
+      duration: spell.duration,
+      concentration: spell.concentration,
+      ritual: spell.ritual,
+      components: {
+        verbal: spell.components?.verbal || false,
+        verbalDescription: spell.components?.verbalDescription || "",
+        somatic: spell.components?.somatic || false,
+        material: spell.components?.material || false,
+        materialDescription: spell.components?.materialDescription || "",
+      },
+      description: spell.description,
+      spellUpgrade: spell.spellUpgrade || "",
+      summonCreature: spell.summonCreature,
+      summonedCreatures: spell.summonedCreatures || [],
+      manaCost: spell.manaCost || false,
+      id: spell.id,
+      created: spell.created,
+      updated: spell.updated,
+    };
   }
 
   generateId(): string {
