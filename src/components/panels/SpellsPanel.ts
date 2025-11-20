@@ -138,10 +138,7 @@ export class SpellsPanel extends ItemView {
       return;
     }
 
-    const sortedSpells = [...filteredSpells].sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
-
+    const sortedSpells = this.sortSpellsByLevelAndName(filteredSpells);
     const groupedSpells = this.groupSpellsBySchool(sortedSpells);
     this.renderGroupedSpellsList(spellsList, groupedSpells);
   }
@@ -203,6 +200,17 @@ export class SpellsPanel extends ItemView {
     return this.spells.filter((spell) =>
       spell.name.toLowerCase().includes(this.searchQuery),
     );
+  }
+
+  private sortSpellsByLevelAndName(spells: Spell[]): Spell[] {
+    return [...spells].sort((a, b) => {
+      // Сначала сортируем по уровню (заклинания с уровнем 0 - заговоры - первыми)
+      if (a.level !== b.level) {
+        return a.level - b.level;
+      }
+      // Если уровень одинаковый, сортируем по названию
+      return a.name.localeCompare(b.name);
+    });
   }
 
   private groupSpellsBySchool(spells: Spell[]): Map<string, Spell[]> {
