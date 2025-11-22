@@ -375,6 +375,55 @@ export const CreatureModalStyles = `
   white-space: nowrap;
 }
 
+/* Styles for spell options container */
+.spell-options-container {
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  background: var(--background-secondary);
+}
+
+.spell-option-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 6px 0;
+}
+
+.spell-option-row:last-child {
+  margin-bottom: 0;
+}
+
+.spell-option-row input[type="checkbox"] {
+  margin: 0;
+}
+
+.spell-option-row label {
+  font-family: var(--font-interface);
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  cursor: pointer;
+  min-width: 180px;
+}
+
+.spell-select-dropdown {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  background: var(--background-primary);
+  color: var(--text-normal);
+  font-family: var(--font-interface);
+  font-size: var(--font-ui-small);
+}
+
+.spell-select-dropdown:focus {
+  border-color: var(--interactive-accent);
+  outline: none;
+}
+
 /* Ensure consistent styling with other modal elements */
 .mod-creature-creation .spell-counting-container {
   font-family: var(--font-interface) !important;
@@ -383,5 +432,9 @@ export const CreatureModalStyles = `
 .mod-creature-creation .spell-counting-option label {
   font-family: var(--font-interface) !important;
   font-size: var(--font-ui-small) !important;
+}
+
+.mod-creature-creation .spell-options-container {
+  font-family: var(--font-interface) !important;
 }
 `;

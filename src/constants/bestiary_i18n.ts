@@ -160,7 +160,7 @@ export const LOCALE_EN = {
     USES_SPELLS_DESC: "Add the 'Using Spells' trait to a creature",
     SPELLS_TRAIT_NAME: "Spells Using",
     SPELL_COUNTING_MODE: "Select spell counting mode",
-    SPELL_COUNTING_USES: "Number of uses",
+    SPELL_COUNTING_USES: "Counters",
     SPELL_COUNTING_SLOTS: "Slots",
   },
   ACTIONS: {
@@ -412,7 +412,7 @@ export const LOCALE_RU = {
     USES_SPELLS_DESC: "Добавить существу черту 'Использование заклинаний'",
     SPELLS_TRAIT_NAME: "Использование заклинаний",
     SPELL_COUNTING_MODE: "Выберите режим счета заклинаний",
-    SPELL_COUNTING_USES: "Количество использований",
+    SPELL_COUNTING_USES: "Счетчики",
     SPELL_COUNTING_SLOTS: "Слоты",
   },
   ACTIONS: {

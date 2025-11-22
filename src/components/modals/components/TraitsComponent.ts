@@ -10,6 +10,29 @@ export class TraitsComponent {
   private traitNameInput: HTMLInputElement | null = null;
   private spellCountingMode: "uses" | "slots" = "uses";
   private spellCountingContainer: HTMLElement | null = null;
+  private spellOptionsContainer: HTMLElement | null = null;
+
+  // Опции для режима "Количество использований"
+  private usesOptions = [
+    { id: "unlimited", label: "Неограничено", checked: false, spell: "" },
+    { id: "once_per_day", label: "1/день каждое", checked: false, spell: "" },
+    { id: "twice_per_day", label: "2/день каждое", checked: false, spell: "" },
+    { id: "thrice_per_day", label: "3/день каждое", checked: false, spell: "" }
+  ];
+
+  // Опции для режима "Слоты"
+  private slotsOptions = [
+    { id: "cantrips", label: "Заговоры (неограниченно)", checked: false, spell: "" },
+    { id: "level1", label: "1 уровень (4 ячейки)", checked: false, spell: "" },
+    { id: "level2", label: "2 уровень (3 ячейки)", checked: false, spell: "" },
+    { id: "level3", label: "3 уровень (3 ячейки)", checked: false, spell: "" },
+    { id: "level4", label: "4 уровень (3 ячейки)", checked: false, spell: "" },
+    { id: "level5", label: "5 уровень (3 ячейки)", checked: false, spell: "" },
+    { id: "level6", label: "6 уровень (1 ячейка)", checked: false, spell: "" },
+    { id: "level7", label: "7 уровень (1 ячейка)", checked: false, spell: "" },
+    { id: "level8", label: "8 уровень (1 ячейка)", checked: false, spell: "" },
+    { id: "level9", label: "9 уровень (1 ячейка)", checked: false, spell: "" }
+  ];
 
   render(container: HTMLElement) {
     const section = container.createDiv({ cls: "creature-section" });
@@ -65,6 +88,12 @@ export class TraitsComponent {
 
     this.renderSpellCountingMode();
 
+    // Контейнер для опций заклинаний
+    this.spellOptionsContainer = addTraitContainer.createDiv({
+      cls: "spell-options-container",
+    });
+    this.spellOptionsContainer.style.display = "none";
+
     new Setting(addTraitContainer).addButton((btn) =>
       btn
         .setButtonText(i18n.t("TRAITS.ADD_TRAIT"))
@@ -92,6 +121,7 @@ export class TraitsComponent {
           this.newTraitDesc = "";
           this.usesSpells = false;
           this.spellCountingMode = "uses";
+          this.resetSpellOptions();
 
           if (this.traitNameInput) {
             this.traitNameInput.value = "";
@@ -104,7 +134,7 @@ export class TraitsComponent {
           ) as HTMLTextAreaElement;
           if (descInput) descInput.value = "";
 
-          // Сбрасываем чекбокс и скрываем контейнер выбора режима
+          // Сбрасываем чекбокс и скрываем контейнеры
           const toggleInput = addTraitContainer.querySelector(
             'input[type="checkbox"]',
           ) as HTMLInputElement;
@@ -112,6 +142,10 @@ export class TraitsComponent {
 
           if (this.spellCountingContainer) {
             this.spellCountingContainer.style.display = "none";
+          }
+
+          if (this.spellOptionsContainer) {
+            this.spellOptionsContainer.style.display = "none";
           }
 
           // Сбрасываем радиокнопки
@@ -163,6 +197,8 @@ export class TraitsComponent {
     usesRadio.addEventListener("change", () => {
       if (usesRadio.checked) {
         this.spellCountingMode = "uses";
+        this.resetOppositeModeOptions(); // Сбрасываем опции противоположного режима
+        this.renderSpellOptions();
       }
     });
 
@@ -188,6 +224,8 @@ export class TraitsComponent {
     slotsRadio.addEventListener("change", () => {
       if (slotsRadio.checked) {
         this.spellCountingMode = "slots";
+        this.resetOppositeModeOptions(); // Сбрасываем опции противоположного режима
+        this.renderSpellOptions();
       }
     });
 
@@ -195,6 +233,99 @@ export class TraitsComponent {
       attr: { for: "spell-counting-slots" },
     });
     slotsLabel.setText(i18n.t("TRAITS.SPELL_COUNTING_SLOTS"));
+  }
+
+  private renderSpellOptions() {
+    if (!this.spellOptionsContainer) return;
+
+    this.spellOptionsContainer.empty();
+    this.spellOptionsContainer.style.display = "block";
+
+    const options = this.spellCountingMode === "uses" ? this.usesOptions : this.slotsOptions;
+
+    options.forEach((option) => {
+      const optionContainer = this.spellOptionsContainer!.createDiv({
+        cls: "spell-option-row",
+      });
+
+      // Чекбокс
+      const checkbox = optionContainer.createEl("input", {
+        type: "checkbox",
+        attr: { id: `spell-option-${option.id}` },
+      }) as HTMLInputElement;
+      checkbox.checked = option.checked;
+      checkbox.addEventListener("change", () => {
+        option.checked = checkbox.checked;
+        spellSelect.style.display = checkbox.checked ? "block" : "none";
+      });
+
+      // Лейбл для чекбокса
+      const label = optionContainer.createEl("label", {
+        attr: { for: `spell-option-${option.id}` },
+        text: option.label,
+      });
+
+      // Дропдаун для выбора заклинания
+      const spellSelect = optionContainer.createEl("select", {
+        cls: "spell-select-dropdown",
+      }) as HTMLSelectElement;
+      spellSelect.style.display = option.checked ? "block" : "none";
+      spellSelect.value = option.spell;
+
+      // Заполняем дропдаун демо-заклинаниями (в реальном приложении нужно получать из SpellService)
+      this.populateSpellDropdown(spellSelect);
+
+      spellSelect.addEventListener("change", () => {
+        option.spell = spellSelect.value;
+      });
+    });
+  }
+
+  private populateSpellDropdown(select: HTMLSelectElement) {
+    // Демо-заклинания - в реальном приложении нужно получать из SpellService
+    const demoSpells = [
+      { value: "", text: "Выберите заклинание..." },
+      { value: "fireball", text: "Огненный шар" },
+      { value: "heal", text: "Лечение" },
+      { value: "lightning_bolt", text: "Молниевая стрела" },
+      { value: "magic_missile", text: "Волшебная стрела" },
+      { value: "cure_wounds", text: "Лечение ран" },
+      { value: "shield", text: "Щит" },
+      { value: "mage_armor", text: "Доспех мага" },
+    ];
+
+    demoSpells.forEach(spell => {
+      const option = select.createEl("option", {
+        value: spell.value,
+        text: spell.text,
+      });
+    });
+  }
+
+  private resetSpellOptions() {
+    this.usesOptions.forEach(option => {
+      option.checked = false;
+      option.spell = "";
+    });
+    this.slotsOptions.forEach(option => {
+      option.checked = false;
+      option.spell = "";
+    });
+  }
+
+  private resetOppositeModeOptions() {
+    // Сбрасываем опции противоположного режима при переключении радиокнопок
+    if (this.spellCountingMode === "uses") {
+      this.slotsOptions.forEach(option => {
+        option.checked = false;
+        option.spell = "";
+      });
+    } else {
+      this.usesOptions.forEach(option => {
+        option.checked = false;
+        option.spell = "";
+      });
+    }
   }
 
   private onUsesSpellsChange(value: boolean) {
@@ -212,6 +343,9 @@ export class TraitsComponent {
         if (this.spellCountingContainer) {
           this.spellCountingContainer.style.display = "block";
         }
+
+        // Показываем опции заклинаний
+        this.renderSpellOptions();
       } else {
         // Выключаем чекбокс - очищаем поле и снимаем read-only
         this.traitNameInput.value = "";
@@ -219,10 +353,16 @@ export class TraitsComponent {
         this.traitNameInput.readOnly = false;
         this.traitNameInput.placeholder = i18n.t("TRAITS.TRAIT_NAME_PLACEHOLDER");
 
-        // Скрываем контейнер выбора режима счета заклинаний
+        // Скрываем контейнеры
         if (this.spellCountingContainer) {
           this.spellCountingContainer.style.display = "none";
         }
+
+        if (this.spellOptionsContainer) {
+          this.spellOptionsContainer.style.display = "none";
+        }
+
+        this.resetSpellOptions();
       }
     }
   }
@@ -290,5 +430,13 @@ export class TraitsComponent {
 
   getSpellCountingMode(): string {
     return this.spellCountingMode;
+  }
+
+  getSelectedSpellOptions(): any[] {
+    if (this.spellCountingMode === "uses") {
+      return this.usesOptions.filter(option => option.checked);
+    } else {
+      return this.slotsOptions.filter(option => option.checked);
+    }
   }
 }
