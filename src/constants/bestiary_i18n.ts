@@ -162,6 +162,25 @@ export const LOCALE_EN = {
     SPELL_COUNTING_MODE: "Select spell counting mode",
     SPELL_COUNTING_USES: "Counters",
     SPELL_COUNTING_SLOTS: "Slots",
+    // Новые константы для опций использования заклинаний
+    USES_OPTIONS: {
+      UNLIMITED: "Unlimited",
+      ONCE_PER_DAY: "1/day each",
+      TWICE_PER_DAY: "2/day each",
+      THRICE_PER_DAY: "3/day each",
+    },
+    SLOTS_OPTIONS: {
+      CANTRIPS: "Cantrips (unlimited)",
+      LEVEL_1: "Level 1 (4 slots)",
+      LEVEL_2: "Level 2 (3 slots)",
+      LEVEL_3: "Level 3 (3 slots)",
+      LEVEL_4: "Level 4 (3 slots)",
+      LEVEL_5: "Level 5 (3 slots)",
+      LEVEL_6: "Level 6 (1 slot)",
+      LEVEL_7: "Level 7 (1 slot)",
+      LEVEL_8: "Level 8 (1 slot)",
+      LEVEL_9: "Level 9 (1 slot)",
+    },
   },
   ACTIONS: {
     TITLE: "Actions",
@@ -414,6 +433,25 @@ export const LOCALE_RU = {
     SPELL_COUNTING_MODE: "Выберите режим счета заклинаний",
     SPELL_COUNTING_USES: "Счетчики",
     SPELL_COUNTING_SLOTS: "Слоты",
+    // Новые константы для опций использования заклинаний
+    USES_OPTIONS: {
+      UNLIMITED: "Неограничено",
+      ONCE_PER_DAY: "1/день каждое",
+      TWICE_PER_DAY: "2/день каждое",
+      THRICE_PER_DAY: "3/день каждое",
+    },
+    SLOTS_OPTIONS: {
+      CANTRIPS: "Заговоры (неограниченно)",
+      LEVEL_1: "1 уровень (4 ячейки)",
+      LEVEL_2: "2 уровень (3 ячейки)",
+      LEVEL_3: "3 уровень (3 ячейки)",
+      LEVEL_4: "4 уровень (3 ячейки)",
+      LEVEL_5: "5 уровень (3 ячейки)",
+      LEVEL_6: "6 уровень (1 ячейка)",
+      LEVEL_7: "7 уровень (1 ячейка)",
+      LEVEL_8: "8 уровень (1 ячейка)",
+      LEVEL_9: "9 уровень (1 ячейка)",
+    },
   },
   ACTIONS: {
     TITLE: "Действия",

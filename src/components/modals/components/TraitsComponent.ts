@@ -13,28 +13,93 @@ export class TraitsComponent {
   private spellOptionsContainer: HTMLElement | null = null;
 
   private usesOptions = [
-    { id: "unlimited", label: "Неограничено", checked: false, spell: "" },
-    { id: "once_per_day", label: "1/день каждое", checked: false, spell: "" },
-    { id: "twice_per_day", label: "2/день каждое", checked: false, spell: "" },
-    { id: "thrice_per_day", label: "3/день каждое", checked: false, spell: "" },
+    { 
+      id: "unlimited", 
+      label: i18n.t("TRAITS.USES_OPTIONS.UNLIMITED"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "once_per_day", 
+      label: i18n.t("TRAITS.USES_OPTIONS.ONCE_PER_DAY"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "twice_per_day", 
+      label: i18n.t("TRAITS.USES_OPTIONS.TWICE_PER_DAY"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "thrice_per_day", 
+      label: i18n.t("TRAITS.USES_OPTIONS.THRICE_PER_DAY"), 
+      checked: false, 
+      spell: "" 
+    },
   ];
 
   private slotsOptions = [
     {
       id: "cantrips",
-      label: "Заговоры (неограниченно)",
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.CANTRIPS"),
       checked: false,
       spell: "",
     },
-    { id: "level1", label: "1 уровень (4 ячейки)", checked: false, spell: "" },
-    { id: "level2", label: "2 уровень (3 ячейки)", checked: false, spell: "" },
-    { id: "level3", label: "3 уровень (3 ячейки)", checked: false, spell: "" },
-    { id: "level4", label: "4 уровень (3 ячейки)", checked: false, spell: "" },
-    { id: "level5", label: "5 уровень (3 ячейки)", checked: false, spell: "" },
-    { id: "level6", label: "6 уровень (1 ячейка)", checked: false, spell: "" },
-    { id: "level7", label: "7 уровень (1 ячейка)", checked: false, spell: "" },
-    { id: "level8", label: "8 уровень (1 ячейка)", checked: false, spell: "" },
-    { id: "level9", label: "9 уровень (1 ячейка)", checked: false, spell: "" },
+    { 
+      id: "level1", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_1"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "level2", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_2"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "level3", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_3"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "level4", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_4"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "level5", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_5"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "level6", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_6"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "level7", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_7"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "level8", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_8"), 
+      checked: false, 
+      spell: "" 
+    },
+    { 
+      id: "level9", 
+      label: i18n.t("TRAITS.SLOTS_OPTIONS.LEVEL_9"), 
+      checked: false, 
+      spell: "" 
+    },
   ];
 
   render(container: HTMLElement) {
