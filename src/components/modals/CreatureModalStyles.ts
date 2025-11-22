@@ -323,4 +323,62 @@ export const CreatureModalStyles = `
     font-family: var(--font-interface) !important;
     font-size: var(--font-ui-small) !important;
 }
+
+/* Styles for spell counting mode selection */
+.spell-counting-container {
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  background: var(--background-secondary);
+}
+
+.spell-counting-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--text-normal);
+  font-size: 14px;
+  font-family: var(--font-interface);
+  text-align: center;
+}
+
+.spell-counting-radio-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Уменьшено расстояние между опциями */
+}
+
+.spell-counting-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.spell-counting-option:hover {
+  background: var(--background-modifier-hover);
+}
+
+.spell-counting-option input[type="radio"] {
+  margin: 0;
+}
+
+.spell-counting-option label {
+  font-family: var(--font-interface);
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  cursor: pointer;
+}
+
+/* Ensure consistent styling with other modal elements */
+.mod-creature-creation .spell-counting-container {
+  font-family: var(--font-interface) !important;
+}
+
+.mod-creature-creation .spell-counting-option label {
+  font-family: var(--font-interface) !important;
+  font-size: var(--font-ui-small) !important;
+}
 `;

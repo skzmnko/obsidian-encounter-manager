@@ -8,6 +8,8 @@ export class TraitsComponent {
   private newTraitDesc: string = "";
   private usesSpells: boolean = false;
   private traitNameInput: HTMLInputElement | null = null;
+  private spellCountingMode: "uses" | "slots" = "uses";
+  private spellCountingContainer: HTMLElement | null = null;
 
   render(container: HTMLElement) {
     const section = container.createDiv({ cls: "creature-section" });
@@ -55,6 +57,14 @@ export class TraitsComponent {
           .onChange((value) => this.onUsesSpellsChange(value)),
       );
 
+    // Контейнер для выбора режима счета заклинаний внутри блока черты
+    this.spellCountingContainer = addTraitContainer.createDiv({
+      cls: "spell-counting-container",
+    });
+    this.spellCountingContainer.style.display = "none";
+
+    this.renderSpellCountingMode();
+
     new Setting(addTraitContainer).addButton((btn) =>
       btn
         .setButtonText(i18n.t("TRAITS.ADD_TRAIT"))
@@ -76,9 +86,12 @@ export class TraitsComponent {
           };
 
           this.traits.push(newTrait);
+
+          // Сбрасываем форму
           this.newTraitName = "";
           this.newTraitDesc = "";
           this.usesSpells = false;
+          this.spellCountingMode = "uses";
 
           if (this.traitNameInput) {
             this.traitNameInput.value = "";
@@ -91,10 +104,25 @@ export class TraitsComponent {
           ) as HTMLTextAreaElement;
           if (descInput) descInput.value = "";
 
+          // Сбрасываем чекбокс и скрываем контейнер выбора режима
           const toggleInput = addTraitContainer.querySelector(
             'input[type="checkbox"]',
           ) as HTMLInputElement;
           if (toggleInput) toggleInput.checked = false;
+
+          if (this.spellCountingContainer) {
+            this.spellCountingContainer.style.display = "none";
+          }
+
+          // Сбрасываем радиокнопки
+          const radioInputs = addTraitContainer.querySelectorAll('input[type="radio"]');
+          radioInputs.forEach((input: HTMLInputElement) => {
+            if (input.value === "uses") {
+              input.checked = true;
+            } else {
+              input.checked = false;
+            }
+          });
 
           this.updateTraitsList(container);
           new Notice(i18n.t("TRAITS.SUCCESS", { name: newTrait.name }));
@@ -102,20 +130,99 @@ export class TraitsComponent {
     );
   }
 
+  private renderSpellCountingMode() {
+    if (!this.spellCountingContainer) return;
+
+    this.spellCountingContainer.empty();
+
+    // Заголовок
+    const title = this.spellCountingContainer.createDiv({
+      cls: "spell-counting-title",
+    });
+    title.setText(i18n.t("TRAITS.SPELL_COUNTING_MODE"));
+
+    // Контейнер для радиокнопок
+    const radioContainer = this.spellCountingContainer.createDiv({
+      cls: "spell-counting-radio-container",
+    });
+
+    // Опция "Количество использований"
+    const usesOption = radioContainer.createDiv({
+      cls: "spell-counting-option",
+    });
+
+    const usesRadio = usesOption.createEl("input", {
+      type: "radio",
+      attr: {
+        id: "spell-counting-uses",
+        name: "spell-counting-mode",
+        value: "uses",
+      },
+    }) as HTMLInputElement;
+    usesRadio.checked = this.spellCountingMode === "uses";
+    usesRadio.addEventListener("change", () => {
+      if (usesRadio.checked) {
+        this.spellCountingMode = "uses";
+      }
+    });
+
+    const usesLabel = usesOption.createEl("label", {
+      attr: { for: "spell-counting-uses" },
+    });
+    usesLabel.setText(i18n.t("TRAITS.SPELL_COUNTING_USES"));
+
+    // Опция "Слоты"
+    const slotsOption = radioContainer.createDiv({
+      cls: "spell-counting-option",
+    });
+
+    const slotsRadio = slotsOption.createEl("input", {
+      type: "radio",
+      attr: {
+        id: "spell-counting-slots",
+        name: "spell-counting-mode",
+        value: "slots",
+      },
+    }) as HTMLInputElement;
+    slotsRadio.checked = this.spellCountingMode === "slots";
+    slotsRadio.addEventListener("change", () => {
+      if (slotsRadio.checked) {
+        this.spellCountingMode = "slots";
+      }
+    });
+
+    const slotsLabel = slotsOption.createEl("label", {
+      attr: { for: "spell-counting-slots" },
+    });
+    slotsLabel.setText(i18n.t("TRAITS.SPELL_COUNTING_SLOTS"));
+  }
+
   private onUsesSpellsChange(value: boolean) {
     this.usesSpells = value;
 
     if (this.traitNameInput) {
       if (value) {
+        // Включаем чекбокс - заполняем название и делаем read-only
         const spellTraitName = i18n.t("TRAITS.SPELLS_TRAIT_NAME");
         this.traitNameInput.value = spellTraitName;
         this.newTraitName = spellTraitName;
         this.traitNameInput.readOnly = true;
+
+        // Показываем контейнер выбора режима счета заклинаний
+        if (this.spellCountingContainer) {
+          this.spellCountingContainer.style.display = "block";
+        }
       } else {
+        // Выключаем чекбокс - очищаем поле и снимаем read-only
         this.traitNameInput.value = "";
         this.newTraitName = "";
         this.traitNameInput.readOnly = false;
         this.traitNameInput.placeholder = i18n.t("TRAITS.TRAIT_NAME_PLACEHOLDER");
+
+        // Скрываем контейнер выбора режима счета заклинаний
+        if (this.spellCountingContainer) {
+          this.spellCountingContainer.style.display = "none";
+        }
       }
     }
   }
@@ -179,5 +286,9 @@ export class TraitsComponent {
 
   getUsesSpells(): boolean {
     return this.usesSpells;
+  }
+
+  getSpellCountingMode(): string {
+    return this.spellCountingMode;
   }
 }
